@@ -7,6 +7,9 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 
 var bodyParser = require("body-parser");
 
+var snakes = [{"id":1,"color":"aaa783","length":45},{"id":2,"color":"bba433","length":33}];
+
+startUpdateSnakeTimer();
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
 
@@ -19,6 +22,10 @@ var server = app.listen(port, function () {
 
 // Use '/test' to send "test" as a response.
 
+function startUpdateSnakeTimer()
+{
+	
+}
 
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -30,6 +37,20 @@ app.get('/test', function (req, res) {
   res.send('tested');
 });
 
+// create a get handler that will accept which direction arrow was press, which id pressed it
+
+
+
+app.get('/getAllSnakes', function (req, res) {
+  res.send(
+	  {
+		"result":"success",
+		"snakes":snakes
+	  }
+  );
+});
+
+/*
 app.get('/oddOrEven/:number', function(req,res) {
 	if (req.params.number % 2 == 0)
 	{
@@ -44,7 +65,7 @@ app.get('/oddOrEven/:number', function(req,res) {
 		});
 	}	
 });
-
+*/
 
 app.use(bodyParser.json());
 
