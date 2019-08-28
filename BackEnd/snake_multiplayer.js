@@ -7,9 +7,7 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 
 var bodyParser = require("body-parser");
 
-var snakes = [{"id":1,"color":"aaa783","length":45},{"id":2,"color":"bba433","length":33}];
-
-startUpdateSnakeTimer();
+var snakes = [];
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
 
@@ -22,10 +20,65 @@ var server = app.listen(port, function () {
 
 // Use '/test' to send "test" as a response.
 
-function startUpdateSnakeTimer()
-{
+// create a get handler that will accept which direction arrow was press, which id pressed it
+
+function StartMultiPlayerGame() {
 	
 }
+
+app.get('/setUpRoom', function (req, res) {
+	var result           = '';
+   	var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  	var charactersLength = characters.length;
+   	for (var i = 0; i <= 5; i++) {
+      		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   	}
+	var randX = Math.floor(Math.random() * 79);
+	var randY = Math.floor(Math.random() * 39);
+	var snake = new Snake(0, [randX,randY], result); //id(since he started the room hes number 0), blocks, roomCode	
+	snakes.push(snake);
+	res.send({
+		"result":"success"
+		"code":result
+	});
+});	
+
+app.get('/startMultiPlayerGame', function (req, res) {
+	res.send({
+		"result":"success"
+	});
+	StartMultiPlayerGame();
+});
+
+app.get('/getAllSnakes', function (req, res) {
+  res.send({
+		"result":"success",
+		"snakes":snakes
+	  });
+});
+
+class Snake() {
+	constructor(ID, blocks, roomCode) {
+		this.ID = ID;
+		this.blocks = blocks;
+		this.roomCode = roomCode;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -37,20 +90,10 @@ app.get('/test', function (req, res) {
   res.send('tested');
 });
 
-// create a get handler that will accept which direction arrow was press, which id pressed it
 
-
-
-app.get('/getAllSnakes', function (req, res) {
-  res.send(
-	  {
-		"result":"success",
-		"snakes":snakes
-	  }
-  );
-});
 
 /*
+
 app.get('/oddOrEven/:number', function(req,res) {
 	if (req.params.number % 2 == 0)
 	{
