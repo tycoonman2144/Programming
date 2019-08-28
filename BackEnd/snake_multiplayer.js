@@ -62,7 +62,7 @@ app.get('/getAllSnakes', function (req, res) {
 	  });
 });
 
-class Snake() {
+class Snake {
 	constructor(ID, blocks, roomCode) {
 		this.ID = ID;
 		this.blocks = blocks;
@@ -70,7 +70,7 @@ class Snake() {
 	}
 }
 
-class Room() {
+class Room {
 	constructor(ID, Snakes) {
 		this.ID = ID;
 		this.Snakes = Snakes;
