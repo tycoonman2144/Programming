@@ -45,7 +45,24 @@ app.get('/setUpRoom', function (req, res) {
 });
 
 app.get('/JoinRoom:AttemtID', function (req, res) {
-	
+	if(rooms != []) {
+		for(var i = 0; i < rooms.length; i++) {
+			if(rooms[i].ID == AttemtID) { //if entered a valid id
+				var randX = Math.floor(Math.random() * 79);
+				var randY = Math.floor(Math.random() * 39);
+				//if he  spawns where no one else did
+				var snake = new Snake(rooms[i].length, [randX,randY], AttemtID);
+				res.send({
+					"result":"success",
+					"ID":rooms[i].length
+				});
+			}
+		}
+	} else {
+		res.send({
+			"result":"error"
+		});
+	}
 });
 
 app.get('/startMultiPlayerGame', function (req, res) {
@@ -55,10 +72,16 @@ app.get('/startMultiPlayerGame', function (req, res) {
 	StartMultiPlayerGame();
 });
 
-app.get('/getAllSnakes', function (req, res) {
-  res.send({
+app.get('/getAllSnakes:RoomID', function (req, res) {
+	var CurrentRoom;
+  	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
+		if(rooms[i].ID == RoomID) {
+			CurrentRoom = rooms[i];	
+		}
+	}
+	res.send({
 		"result":"success",
-		"snakes":"have them send the room there in and then send list full of snakes in that room"
+		"snakes":CurrentRoom.Snakes
 	  });
 });
 
