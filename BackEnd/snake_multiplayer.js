@@ -50,12 +50,19 @@ app.get('/JoinRoom:AttemtID', function (req, res) {
 			if(rooms[i].ID == AttemtID) { //if entered a valid id
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
-				//if he  spawns where no one else did
+				for (var j = 0; j < rooms[i].Snakes.length) { //makes sure if they spawned where others did and if so make a new spawning spot
+					if(rooms[i].Snakes[j].blocks == [randX,randY]) {
+						randX = Math.floor(Math.random() * 79);
+						randY = Math.floor(Math.random() * 39);
+						i = 0;
+					}
+				}
 				var snake = new Snake(rooms[i].length, [randX,randY], AttemtID);
 				res.send({
 					"result":"success",
 					"ID":rooms[i].length
 				});
+				break;
 			}
 		}
 	} else {
