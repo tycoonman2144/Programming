@@ -7,7 +7,7 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 
 var bodyParser = require("body-parser");
 
-var snakes = [];
+var rooms = [];
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
 
@@ -36,12 +36,17 @@ app.get('/setUpRoom', function (req, res) {
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
 	var snake = new Snake(0, [randX,randY], result); //id(since he started the room hes number 0), blocks, roomCode	
-	snakes.push(snake);
+	var room = new Room(result, snake);
+	rooms.push(room);
 	res.send({
 		"result":"success"
 		"code":result
 	});
-});	
+});
+
+app.get('/JoinRoom':AttemtID, function (req, res) {
+	
+});
 
 app.get('/startMultiPlayerGame', function (req, res) {
 	res.send({
@@ -53,7 +58,7 @@ app.get('/startMultiPlayerGame', function (req, res) {
 app.get('/getAllSnakes', function (req, res) {
   res.send({
 		"result":"success",
-		"snakes":snakes
+		"snakes":"have them send the room there in and then send list full of snakes in that room"
 	  });
 });
 
@@ -62,6 +67,13 @@ class Snake() {
 		this.ID = ID;
 		this.blocks = blocks;
 		this.roomCode = roomCode;
+	}
+}
+
+class Room() {
+	constructor(ID, Snakes) {
+		this.ID = ID;
+		this.Snakes = Snakes;
 	}
 }
 
