@@ -62,19 +62,15 @@ app.get('/getAllSnakes', function (req, res) {
 	  });
 });
 
-class Snake {
-	constructor(ID, blocks, roomCode) {
-		this.ID = ID;
-		this.blocks = blocks;
-		this.roomCode = roomCode;
-	}
+function Snake(ID, blocks, roomCode) {
+	this.ID = ID;
+	this.blocks = blocks;
+	this.roomCode = roomCode;
 }
 
-class Room {
-	constructor(ID, Snakes) {
-		this.ID = ID;
-		this.Snakes = Snakes;
-	}
+function Room(ID, Snakes) {
+	this.ID = ID;
+	this.Snakes = Snakes;
 }
 
 
