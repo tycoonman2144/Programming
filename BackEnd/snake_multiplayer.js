@@ -39,7 +39,7 @@ app.get('/setUpRoom', function (req, res) {
 	var room = new Room(result, snake);
 	rooms.push(room);
 	res.send({
-		"result":"success"
+		"result":"success",
 		"code":result
 	});
 });
