@@ -44,7 +44,7 @@ app.get('/setUpRoom', function (req, res) {
 	});
 });
 
-app.get('/JoinRoom':AttemtID, function (req, res) {
+app.get('/JoinRoom:AttemtID', function (req, res) {
 	
 });
 
