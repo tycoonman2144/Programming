@@ -8,6 +8,7 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 var bodyParser = require("body-parser");
 
 var rooms = [];
+var moveInterval;
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
 
@@ -22,9 +23,6 @@ var server = app.listen(port, function () {
 
 // create a get handler that will accept which direction arrow was press, which id pressed it
 
-function StartMultiPlayerGame() {
-	
-}
 
 app.get('/setUpRoom', function (req, res) {
 	var result           = '';
@@ -35,8 +33,8 @@ app.get('/setUpRoom', function (req, res) {
    	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var snake = new Snake(0, [randX,randY], result); //id(since he started the room hes number 0), blocks, roomCode	
-	var room = new Room(result, snake);
+	var snake = new Snake(0, [randX,randY], result, null); //id(since he started the room hes number 0), blocks, roomCode	
+	var room = new Room(result, snake, false, []);
 	rooms.push(room);
 	res.send({
 		"result":"success",
@@ -50,14 +48,14 @@ app.get('/JoinRoom:AttemtID', function (req, res) {
 			if(rooms[i].ID == AttemtID) { //if entered a valid id
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
-				for (var j = 0; j < rooms[i].Snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
-					if(rooms[i].Snakes[j].blocks == [randX,randY]) {
+				for (var j = 0; j < rooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
+					if(rooms[i].snakes[j].blocks == [randX,randY]) {
 						randX = Math.floor(Math.random() * 79);
 						randY = Math.floor(Math.random() * 39);
 						i = 0;
 					}
 				}
-				var snake = new Snake(rooms[i].length, [randX,randY], AttemtID);
+				var snake = new Snake(rooms[i].length, [randX,randY], AttemtID, null);
 				res.send({
 					"result":"success",
 					"ID":rooms[i].length
@@ -72,11 +70,29 @@ app.get('/JoinRoom:AttemtID', function (req, res) {
 	}
 });
 
-app.get('/startMultiPlayerGame', function (req, res) {
+app.get('/startMultiPlayerGame:RoomID', function (req, res) {
+	for(var i = 0; i < rooms.length; i++) {
+		if(rooms[i].ID == RoomID) rooms[i].active = true;	
+	}
+	moveInterval = setInterval( function(){ 
+			for (var i = 0; i < rooms.length; i++) {
+				if(rooms[i].active == true) { // if im looking at a room that has started
+					for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
+						/*Move();  add these but make it multiplayer freindly
+						if (isNoFuits) counter += 100;
+						if (counter >= randTime) MakeFruit();
+						*/
+					}
+				}
+			}
+		},60);
 	res.send({
 		"result":"success"
 	});
-	StartMultiPlayerGame();
+});
+
+app.get('/Direction:directionRequest', function (req, res) {
+	
 });
 
 app.get('/getAllSnakes:RoomID', function (req, res) {
@@ -88,19 +104,23 @@ app.get('/getAllSnakes:RoomID', function (req, res) {
 	}
 	res.send({
 		"result":"success",
-		"snakes":CurrentRoom.Snakes
+		"snakes":CurrentRoom.Snakes,
+		"fruit":CurrentRoom.fruit
 	  });
 });
 
-function Snake(ID, blocks, roomCode) {
+function Snake(ID, blocks, roomCode, dirrection) {
 	this.ID = ID;
 	this.blocks = blocks;
 	this.roomCode = roomCode;
+	this.dirrection = dirrection;
 }
 
-function Room(ID, Snakes) {
+function Room(ID, Snakes, Active, fruit) {
 	this.ID = ID;
-	this.Snakes = Snakes;
+	this.snakes = Snakes;
+	this.active = Active;
+	this.fruit = fruit;
 }
 
 
