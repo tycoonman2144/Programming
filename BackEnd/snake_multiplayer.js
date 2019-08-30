@@ -97,6 +97,7 @@ app.get('/Direction:directionRequest', function (req, res) {
 
 app.get('/getAllSnakes/:RoomID', function (req, res) {
 	var CurrentRoom;
+	var RoomID = req.params.RoomID;
 	console.log("Got inside server handler 1");
   	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
 		if(rooms[i].ID == RoomID) {
