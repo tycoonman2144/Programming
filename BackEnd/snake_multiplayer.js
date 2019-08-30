@@ -34,7 +34,7 @@ app.get('/setUpRoom', function (req, res) {
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
 	var snake = new Snake(0, [randX,randY], result, null); //id(since he started the room hes number 0), blocks, roomCode	
-	var room = new Room(result, snake, false, []);
+	var room = new Room(result, [snake], false, []);
 	rooms.push(room);
 	res.send({
 		"result":"success",
@@ -57,6 +57,9 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var snake = new Snake(rooms[i].length, [randX,randY], AttemptID, null);
+				for(var j = 0; j < rooms.length; j++) {
+					if(rooms[j].ID == AttemptID) rooms[j].snakes.push(snake);
+				}
 				res.send({
 					"result":"success",
 					"ID":rooms[i].length
