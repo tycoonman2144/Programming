@@ -42,10 +42,10 @@ app.get('/setUpRoom', function (req, res) {
 	});
 });
 
-app.get('/JoinRoom:AttemtID', function (req, res) {
+app.get('/JoinRoom/:AttemptID', function (req, res) {
 	if(rooms != []) {
 		for(var i = 0; i < rooms.length; i++) {
-			if(rooms[i].ID == AttemtID) { //if entered a valid id
+			if(rooms[i].ID == AttemptID) { //if entered a valid id
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
 				for (var j = 0; j < rooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
@@ -55,7 +55,7 @@ app.get('/JoinRoom:AttemtID', function (req, res) {
 						i = 0;
 					}
 				}
-				var snake = new Snake(rooms[i].length, [randX,randY], AttemtID, null);
+				var snake = new Snake(rooms[i].length, [randX,randY], AttemptID, null);
 				res.send({
 					"result":"success",
 					"ID":rooms[i].length
@@ -70,7 +70,7 @@ app.get('/JoinRoom:AttemtID', function (req, res) {
 	}
 });
 
-app.get('/startMultiPlayerGame:RoomID', function (req, res) {
+app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	for(var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == RoomID) rooms[i].active = true;	
 	}
@@ -95,7 +95,7 @@ app.get('/Direction:directionRequest', function (req, res) {
 	
 });
 
-app.get('/getAllSnakes:RoomID', function (req, res) {
+app.get('/getAllSnakes/:RoomID', function (req, res) {
 	var CurrentRoom;
   	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
 		if(rooms[i].ID == RoomID) {
