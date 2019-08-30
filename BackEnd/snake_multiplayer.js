@@ -62,7 +62,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 				}
 				res.send({
 					"result":"success",
-					"ID":rooms[i].length
+					"ID":rooms[i].snakes.length
 				});
 				break;
 			}
