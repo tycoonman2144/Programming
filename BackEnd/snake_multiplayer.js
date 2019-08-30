@@ -43,6 +43,7 @@ app.get('/setUpRoom', function (req, res) {
 });
 
 app.get('/JoinRoom/:AttemptID', function (req, res) {
+	var AttemptID = req.params.AttemptID;
 	if(rooms != []) {
 		for(var i = 0; i < rooms.length; i++) {
 			if(rooms[i].ID == AttemptID) { //if entered a valid id
@@ -71,6 +72,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 });
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
+	var RoomID = req.params.RoomID;
 	for(var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == RoomID) rooms[i].active = true;	
 	}
@@ -96,8 +98,8 @@ app.get('/Direction:directionRequest', function (req, res) {
 });
 
 app.get('/getAllSnakes/:RoomID', function (req, res) {
-	var CurrentRoom;
 	var RoomID = req.params.RoomID;
+	var CurrentRoom;
 	console.log("Got inside server handler 1");
   	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
 		if(rooms[i].ID == RoomID) {
