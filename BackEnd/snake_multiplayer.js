@@ -108,7 +108,7 @@ app.get('/getAllSnakes/:RoomID', function (req, res) {
 	}
 	res.send({
 		"result":"success",
-		"snakes":CurrentRoom.Snakes,
+		"snakes":CurrentRoom.snakes,
 		"fruit":CurrentRoom.fruit
 	  });
 });
