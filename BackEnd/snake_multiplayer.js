@@ -57,9 +57,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var snake = new Snake(rooms[i].snakes.length, [randX,randY], AttemptID, "right");
-				for(var j = 0; j < rooms.length; j++) {
-					if(rooms[j].ID == AttemptID) rooms[j].snakes.push(snake);
-				}
+				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
 					"ID":rooms[i].snakes.length
