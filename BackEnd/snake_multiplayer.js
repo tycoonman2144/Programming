@@ -17,6 +17,13 @@ var server = app.listen(port, function () {
   console.log('Listening on port %d', server.address().port);
 });
 
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
+
+
 // Use '/' to go to index.html via static middleware
 
 // Use '/test' to send "test" as a response.
@@ -150,14 +157,6 @@ function Room(ID, Snakes, Active, fruit) {
 
 
 
-
-
-
-app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
 
 app.get('/test', function (req, res) {
   res.send('tested');
