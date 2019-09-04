@@ -30,7 +30,7 @@ function GetRandomID() {
 	for (var i = 0; i < 4; i++) {
 		result += characters.charAt(Math.floor(Math.random() * charactersLength));
 	}
-	retern result;
+	return result;
 }
 
 app.get('/setUpRoom', function (req, res) {
