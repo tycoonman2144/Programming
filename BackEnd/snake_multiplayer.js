@@ -23,14 +23,24 @@ var server = app.listen(port, function () {
 
 // create a get handler that will accept which direction arrow was press, which id pressed it
 
+function GetRandomID() {
+	var result           = '';
+	var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for (var i = 0; i < 4; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	retern result;
+}
 
 app.get('/setUpRoom', function (req, res) {
-	var result           = '';
-   	var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  	var charactersLength = characters.length;
-   	for (var i = 0; i < 4; i++) {
-      		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-   	}
+	var result = GetRandomID();
+	for (var i = 0; i < rooms.length; i++) {
+		if(rooms[i].ID == result) {
+			result = GetRandomID(); //if its the same id as someone else's room, get a diffrent id
+			i = 0;
+		}
+	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
 	var snake = new Snake(0, [[randX,randY]], result, "right"); //id(since he started the room hes number 0), blocks, roomCode, dirrection	
