@@ -28,12 +28,12 @@ app.get('/setUpRoom', function (req, res) {
 	var result           = '';
    	var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
   	var charactersLength = characters.length;
-   	for (var i = 0; i <= 4; i++) {
+   	for (var i = 0; i < 4; i++) {
       		result += characters.charAt(Math.floor(Math.random() * charactersLength));
    	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var snake = new Snake(0, [randX,randY], result, "right"); //id(since he started the room hes number 0), blocks, roomCode, dirrection	
+	var snake = new Snake(0, [[randX,randY]], result, "right"); //id(since he started the room hes number 0), blocks, roomCode, dirrection	
 	var room = new Room(result, [snake], false, []);
 	rooms.push(room);
 	res.send({
@@ -57,7 +57,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var ClientID = rooms[i].snakes.length;
-				var snake = new Snake(ClientID, [randX,randY], AttemptID, "right");
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, "right");
 				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
