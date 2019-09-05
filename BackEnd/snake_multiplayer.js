@@ -156,7 +156,7 @@ function Move(snake, room) {
 	}
 	if (room.fruit == [x, y]) EatFruit(snake, room)
 	for (var i = 0; i < room.snakes.length; i++) {
-		for (var j = 0; j < room.snakes.blocks.length) {
+		for (var j = 0; j < room.snakes.blocks.length; j++) {
 			if (room.snakes[i].blocks[j] == [x, y])) Dead(snake, room);  //if someone died
 		}
 	}
