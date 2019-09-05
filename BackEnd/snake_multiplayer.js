@@ -157,7 +157,7 @@ function Move(snake, room) {
 	if (room.fruit == [x, y]) EatFruit(snake, room)
 	for (var i = 0; i < room.snakes.length; i++) {
 		for (var j = 0; j < room.snakes.blocks.length) {
-			if (room.snakes[i].blocks[j] == [x, y])) room.snakes[i].alive = false;  //if someone died
+			if (room.snakes[i].blocks[j] == [x, y])) Dead(snake, room);  //if someone died
 		}
 	}
 	//Color();		ADD THIS LATER
@@ -183,6 +183,15 @@ function EatFruit(snake, room)
 	snake.growing = 5;
 }
 
+function Dead(snake, room) {
+	snake[i].alive = false;
+	var howManyAlive = 0;
+	for(var i = 0; i < room.snakes.length; i++) {
+		if(room.snakes[i].alive == true) howManyAlive++;
+	}
+	if(howManyAlive == 1) room.Active = false; //ends game
+}
+
 app.get('/Direction/:infoToServer', function (req, res) {
 	var InfoFromClient = req.params.infoToServer;
 	for (var i = 0; i < rooms.length; i++) {
@@ -197,6 +206,21 @@ app.get('/Direction/:infoToServer', function (req, res) {
 			}
 		}
 	}
+});
+
+app.get('/EndGame/:RoomID', function (req, res) {
+	var RoomID = req.params.RoomID;
+	for(var i = 0; i < rooms.length; i++) {
+		if(rooms[i].ID == RoomID) rooms.splice(i, 1);	
+	}
+	var NumberOfRoomsActive = 0;
+	for(var i = 0; i < rooms.length; i++) {
+		if(rooms[i].Active == true) NumberOfRoomsActive++;
+	}
+	if (NumberOfRoomsActive == 0) clearInterval(moveInterval);
+	res.send({
+		"result":"success"
+	});
 });
 
 
