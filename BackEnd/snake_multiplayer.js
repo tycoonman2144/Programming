@@ -72,11 +72,12 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 						randY = Math.floor(Math.random() * 39);
 						i = 0;
 					}
-				} else {
-					res.send({
-						"result":"error",
-					});	
 				}
+			} else {
+				res.send({
+					"result":"error",
+				});	
+			}
 				var ClientID = rooms[i].snakes.length;
 				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, "right", 0, true);
 				rooms[i].snakes.push(snake);
