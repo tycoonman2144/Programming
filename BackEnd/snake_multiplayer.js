@@ -63,7 +63,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 	var AttemptID = req.params.AttemptID;
 	if(rooms != []) {
 		for(var i = 0; i < rooms.length; i++) {
-			if(rooms[i].ID == AttemptID && rooms[i].Active == false) { //if entered a valid id and if room is not active
+			if(rooms[i].ID == AttemptID && rooms[i].active == false) { //if entered a valid id and if room is not active
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
 				for (var j = 0; j < rooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
@@ -94,7 +94,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 	}
 });
 
-app.get('/getAllSnakes/:RoomID', function (req, res) {
+app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
   	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
@@ -104,15 +104,14 @@ app.get('/getAllSnakes/:RoomID', function (req, res) {
 	}
 	res.send({
 		"result":"success",
-		"snakes":CurrentRoom.snakes,
-		"fruit":CurrentRoom.fruit
+		"room":CurrentRoom
 	  });
 });
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	for(var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == RoomID) rooms[i].Active = false;	
+		if(rooms[i].ID == RoomID) rooms[i].active = true;	
 	}
 	moveInterval = setInterval( function(){ 
 			for (var i = 0; i < rooms.length; i++) {
@@ -189,7 +188,7 @@ function Dead(snake, room) {
 	for(var i = 0; i < room.snakes.length; i++) {
 		if(room.snakes[i].alive == true) howManyAlive++;
 	}
-	if(howManyAlive == 1) room.Active = false; //ends game
+	if(howManyAlive == 1) room.active = false; //ends game
 }
 
 app.get('/Direction/:infoToServer', function (req, res) {
@@ -215,7 +214,7 @@ app.get('/EndGame/:RoomID', function (req, res) {
 	}
 	var NumberOfRoomsActive = 0;
 	for(var i = 0; i < rooms.length; i++) {
-		if(rooms[i].Active == true) NumberOfRoomsActive++;
+		if(rooms[i].active == true) NumberOfRoomsActive++;
 	}
 	if (NumberOfRoomsActive == 0) clearInterval(moveInterval);
 	res.send({
@@ -233,10 +232,10 @@ function Snake(ID, blocks, roomCode, dirrection, growing, alive) {
 	this.alive = alive;
 }
 
-function Room(ID, Snakes, Active, fruit) {
+function Room(ID, snakes, active, fruit) {
 	this.ID = ID;
-	this.snakes = Snakes;
-	this.active = Active;
+	this.snakes = snakes;
+	this.active = active;
 	this.fruit = fruit;
 }
 
