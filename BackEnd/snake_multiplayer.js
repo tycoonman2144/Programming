@@ -87,7 +87,6 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 				});
 				break;
 			}
-		}
 	} else {
 		res.send({
 			"result":"error"
