@@ -166,7 +166,7 @@ function Move(snake, room) {
 	if (growing == false) snake.blocks.splice(0, 1);
 }
 
-function EatFruit(snake, room)
+function EatFruit(snake, room) {
 	var randX = Math.floor(Math.random() * 80);
 	var randY = Math.floor(Math.random() * 40);
 	for (var i = 0; i < room.snakes.length; i++) {
