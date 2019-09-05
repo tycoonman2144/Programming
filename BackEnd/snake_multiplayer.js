@@ -112,7 +112,7 @@ app.get('/getAllSnakes/:RoomID', function (req, res) {
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	for(var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == RoomID) rooms[i].Active = true;	
+		if(rooms[i].ID == RoomID) rooms[i].Active = false;	
 	}
 	moveInterval = setInterval( function(){ 
 			for (var i = 0; i < rooms.length; i++) {
