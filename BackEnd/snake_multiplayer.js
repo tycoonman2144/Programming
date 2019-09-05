@@ -170,7 +170,7 @@ function EatFruit(snake, room) {
 	var randX = Math.floor(Math.random() * 80);
 	var randY = Math.floor(Math.random() * 40);
 	for (var i = 0; i < room.snakes.length; i++) {
-		for (var j = 0; j < room.snakes.blocks.length) {
+		for (var j = 0; j < room.snakes.blocks.length; j++) {
 			if(room.snakes[i].blocks[j] == [randX, randY]) { // if in same spot that someone else is in
 				var randX = Math.floor(Math.random() * 80);
 				var randY = Math.floor(Math.random() * 40);
