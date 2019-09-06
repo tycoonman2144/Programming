@@ -199,6 +199,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
 					rooms[i].snakes[j].dirrection = InfoFromClient.direction;
+					console.log(InfoFromClient.direction);
 					res.send({
 						"result":"success"
 					});
