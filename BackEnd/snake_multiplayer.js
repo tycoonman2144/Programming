@@ -133,7 +133,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 
 function Move(snake, room) {
 	var X_YList = [];
-	var growing;
+	var growing = false;
 	var direction = snake.dirrection;
 	if (snake.growing != 0) { //if im growing
 		snake.growing = snake.growing - 1;
