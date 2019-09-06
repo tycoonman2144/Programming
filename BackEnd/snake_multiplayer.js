@@ -53,6 +53,7 @@ app.get('/setUpRoom', function (req, res) {
 	var snake = new Snake(0, [[randX,randY]], result, "right", 0, true); //id(since he started the room hes number 0), blocks, roomCode, dirrection, gorwing number, isAlive	
 	var room = new Room(result, [snake], false, []);
 	rooms.push(room);
+	EatFruit(null, room);
 	res.send({
 		"result":"success",
 		"code":result
@@ -179,7 +180,7 @@ function EatFruit(snake, room) {
 		}
 	}
 	room.fruit = [randX, randY];
-	snake.growing = 5;
+	if(snake != null) snake.growing = 5; //if im not making the first fruit
 }
 
 function Dead(snake, room) {
