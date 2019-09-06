@@ -65,6 +65,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 	if(rooms != []) {
 		console.log("found a room");
 		for(var i = 0; i < rooms.length; i++) {
+			console.log(rooms[i].ID);
 			if(rooms[i].ID == AttemptID && rooms[i].active == false) { //if entered a valid id and if room is not active
 				console.log("found your room");
 				var randX = Math.floor(Math.random() * 79);
