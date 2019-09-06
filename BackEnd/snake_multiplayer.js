@@ -125,7 +125,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 					}
 				}
 			}
-		},200);
+		},100);
 	res.send({
 		"result":"success"
 	});
