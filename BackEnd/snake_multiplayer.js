@@ -93,7 +93,6 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 			res.send({
 				"result":"error",
 			});	
-			break;
 		}
 	} else {
 		res.send({
