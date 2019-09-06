@@ -157,19 +157,20 @@ function Move(snake, room) {
 		var x =  snake.blocks[snake.blocks.length - 1][0] == 79 ? 0 : snake.blocks[snake.blocks.length - 1][0] + 1;
 		var y =  snake.blocks[snake.blocks.length - 1][1];
 	}
-	if (room.fruit == [x, y]) EatFruit(snake, room)
 	for (var i = 0; i < room.snakes.length; i++) {
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
 			if (room.snakes[i].blocks[j] == [x, y]) Dead(snake, room);  //if someone died
 		}
 	}
 	//Color();		ADD THIS LATER
+	if (room.fruit == [x, y]) EatFruit(snake, room);
 	X_YList = [x , y];
 	snake.blocks.push(X_YList);		
 	if (growing == false) snake.blocks.splice(0, 1);
 }
 
 function EatFruit(snake, room) {
+	console.log("got in");
 	var randX = Math.floor(Math.random() * 80);
 	var randY = Math.floor(Math.random() * 40);
 	for (var i = 0; i < room.snakes.length; i++) {
