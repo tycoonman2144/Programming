@@ -165,7 +165,7 @@ function Move(snake, room) {
 	//Color();		ADD THIS LATER
 	//console.log("Fruit: " + room.fruit);
 	//console.log(snake.blocks[0][0] + " " + snake.blocks[0][1]);
-	if (room.fruit == [x, y]) EatFruit(snake, room);
+	if (room.fruit[0] == x && room.fruit[1] == y) EatFruit(snake, room);
 	X_YList = [x , y];
 	snake.blocks.push(X_YList);		
 	if (growing == false) snake.blocks.splice(0, 1);
