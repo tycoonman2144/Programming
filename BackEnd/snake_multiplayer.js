@@ -62,12 +62,13 @@ app.get('/setUpRoom', function (req, res) {
 
 app.get('/JoinRoom/:AttemptID', function (req, res) {
 	var AttemptID = req.params.AttemptID;
+	var foundRoom = false;
 	if(rooms != []) {
-		console.log("found a room");
 		for(var i = 0; i < rooms.length; i++) {
 			console.log(rooms[i].ID);
 			console.log(rooms.length);
 			if(rooms[i].ID == AttemptID && rooms[i].active == false) { //if entered a valid id and if room is not active
+				foundRoom = true;
 				console.log("found your room");
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
@@ -78,11 +79,6 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 						i = 0;
 					}
 				}
-			} else {
-				res.send({
-					"result":"error",
-				});	
-				break;
 			}
 				var ClientID = rooms[i].snakes.length;
 				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, "right", 0, true);
@@ -93,6 +89,12 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 				});
 				break;
 			}
+		if(foundRoom == false) {
+			res.send({
+				"result":"error",
+			});	
+			break;
+		}
 	} else {
 		res.send({
 			"result":"error"
