@@ -63,10 +63,10 @@ app.get('/setUpRoom', function (req, res) {
 app.get('/JoinRoom/:AttemptID', function (req, res) {
 	var AttemptID = req.params.AttemptID;
 	if(rooms != []) {
-		console.logs("found a room");
+		console.log("found a room");
 		for(var i = 0; i < rooms.length; i++) {
 			if(rooms[i].ID == AttemptID && rooms[i].active == false) { //if entered a valid id and if room is not active
-				console.logs("found your room");
+				console.log("found your room");
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
 				for (var j = 0; j < rooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
