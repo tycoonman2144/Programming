@@ -163,8 +163,8 @@ function Move(snake, room) {
 		}
 	}
 	//Color();		ADD THIS LATER
-	console.log("Fruit: " + room.fruit);
-	console.log(snake.blocks[0][0] + " " + snake.blocks[0][1]);
+	//console.log("Fruit: " + room.fruit);
+	//console.log(snake.blocks[0][0] + " " + snake.blocks[0][1]);
 	if (room.fruit == [x, y]) EatFruit(snake, room);
 	X_YList = [x , y];
 	snake.blocks.push(X_YList);		
@@ -172,7 +172,6 @@ function Move(snake, room) {
 }
 
 function EatFruit(snake, room) {
-	console.log("got in");
 	var randX = Math.floor(Math.random() * 80);
 	var randY = Math.floor(Math.random() * 40);
 	for (var i = 0; i < room.snakes.length; i++) {
