@@ -54,7 +54,6 @@ app.get('/setUpRoom', function (req, res) {
 	var room = new Room(result, [snake], false, []);
 	rooms.push(room);
 	EatFruit(null, room);
-	console.log(room.fruit);
 	res.send({
 		"result":"success",
 		"code":result
@@ -164,6 +163,8 @@ function Move(snake, room) {
 		}
 	}
 	//Color();		ADD THIS LATER
+	console.log("Fruit: "room.fruit);
+	console.log(snake.blocks[0][0] + " " + snake.blocks[0][1]);
 	if (room.fruit == [x, y]) EatFruit(snake, room);
 	X_YList = [x , y];
 	snake.blocks.push(X_YList);		
