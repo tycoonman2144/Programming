@@ -67,7 +67,6 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 		for(var i = 0; i < rooms.length; i++) {
 			if(rooms[i].ID == AttemptID && rooms[i].active == false) { //if entered a valid id and if room is not active
 				foundRoom = true;
-				console.log("found your room");
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
 				for (var j = 0; j < rooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
@@ -77,15 +76,15 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 						i = 0;
 					}
 				}
+				var ClientID = rooms[i].snakes.length;
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, "right", 0, true);
+				rooms[i].snakes.push(snake);
+				res.send({
+					"result":"success",
+					"ID":ClientID
+				});
+				break;
 			}
-			var ClientID = rooms[i].snakes.length;
-			var snake = new Snake(ClientID, [[randX,randY]], AttemptID, "right", 0, true);
-			rooms[i].snakes.push(snake);
-			res.send({
-				"result":"success",
-				"ID":ClientID
-			});
-			break;
 		}
 		if(foundRoom == false) {
 			res.send({
