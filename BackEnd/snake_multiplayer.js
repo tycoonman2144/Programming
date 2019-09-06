@@ -172,6 +172,7 @@ function Move(snake, room) {
 }
 
 function EatFruit(snake, room) {
+	console.log("got in");
 	var randX = Math.floor(Math.random() * 80);
 	var randY = Math.floor(Math.random() * 40);
 	for (var i = 0; i < room.snakes.length; i++) {
