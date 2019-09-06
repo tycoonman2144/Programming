@@ -54,6 +54,7 @@ app.get('/setUpRoom', function (req, res) {
 	var room = new Room(result, [snake], false, []);
 	rooms.push(room);
 	EatFruit(null, room);
+	console.log(room.fruit);
 	res.send({
 		"result":"success",
 		"code":result
