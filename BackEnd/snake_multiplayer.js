@@ -197,6 +197,9 @@ function Dead(snake, room) {
 
 app.get('/Direction/:infoToServer', function (req, res) {
 	var InfoFromClient = req.params.infoToServer;
+	console.log(InfoFromClient.ID);
+	console.log(InfoFromClient.roomID);
+	console.log(InfoFromClient.direction);
 	for (var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
