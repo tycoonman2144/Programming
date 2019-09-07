@@ -138,8 +138,6 @@ function Move(snake, room) {
 	if (snake.growing != 0) { //if im growing
 		snake.growing = snake.growing - 1;
 		growing = true;
-	} else {
-			growing = false;
 	}
 	if (direction == "up") {
 		var x = snake.blocks[snake.blocks.length - 1][0];
@@ -172,7 +170,6 @@ function Move(snake, room) {
 }
 
 function EatFruit(snake, room) {
-	console.log("got in");
 	var randX = Math.floor(Math.random() * 80);
 	var randY = Math.floor(Math.random() * 40);
 	for (var i = 0; i < room.snakes.length; i++) {
