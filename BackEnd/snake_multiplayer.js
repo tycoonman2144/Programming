@@ -188,7 +188,7 @@ function EatFruit(snake, room) {
 
 function Dead(snake, room) {
 	console.log("ded");
-	snake[i].alive = false;
+	snake.alive = false;
 	var howManyAlive = 0;
 	for(var i = 0; i < room.snakes.length; i++) {
 		if(room.snakes[i].alive == true) howManyAlive++;
