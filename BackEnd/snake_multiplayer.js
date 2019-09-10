@@ -194,7 +194,10 @@ function Dead(snake, room) {
 		if(room.snakes[i].alive == true) howManyAlive++;
 	}
 	console.log(howManyAlive);
-	if(howManyAlive == 1) room.active = false; //ends game
+	if(howManyAlive == 1) {
+		room.active = false; //ends game
+		room.end = true;	
+	}
 }
 
 app.get('/Direction/:infoToServer', function (req, res) {
@@ -248,6 +251,7 @@ function Room(ID, snakes, active, fruit) {
 	this.snakes = snakes;
 	this.active = active;
 	this.fruit = fruit;
+	this.end = false;
 }
 
 
