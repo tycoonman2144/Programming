@@ -50,8 +50,8 @@ app.get('/setUpRoom', function (req, res) {
 	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var snake = new Snake(0, [[randX,randY]], result, "right", 0, true); //id(since he started the room hes number 0), blocks, roomCode, dirrection, gorwing number, isAlive	
-	var room = new Room(result, [snake], false, []);
+	var snake = new Snake(0, [[randX,randY]], result); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var room = new Room(result, [snake]);
 	rooms.push(room);
 	EatFruit(null, room);
 	res.send({
@@ -77,7 +77,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var ClientID = rooms[i].snakes.length;
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, "right", 0, true);
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID);
 				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
@@ -121,7 +121,10 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 			for (var i = 0; i < rooms.length; i++) {
 				if(rooms[i].active == true) { // if im looking at a room that has started
 					for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
-						Move(rooms[i].snakes[j], rooms[i]); //this includes growing, makeing/eating fruit, dieing
+						if(rooms[i].snakes[j].alive == true) {
+							rooms[i].snakes[j].direction = rooms[i].snakes[j].directionReqest;
+							Move(rooms[i].snakes[j], rooms[i]); //this includes growing, makeing/eating fruit, dieing
+						}
 					}
 				}
 			}
@@ -134,7 +137,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 function Move(snake, room) {
 	var X_YList = [];
 	var growing = false;
-	var direction = snake.dirrection;
+	var direction = snake.direction;
 	if (snake.growing != 0) { //if im growing
 		snake.growing = snake.growing - 1;
 		growing = true;
@@ -157,12 +160,10 @@ function Move(snake, room) {
 	}
 	for (var i = 0; i < room.snakes.length; i++) {
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
-			if (room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) Dead(snake, room);  //if someone died
+			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true) Dead(snake, room);  //if someone died
 		}
 	}
 	//Color();		ADD THIS LATER
-	//console.log("Fruit: " + room.fruit);
-	//console.log(snake.blocks[0][0] + " " + snake.blocks[0][1]);
 	if (room.fruit[0] == x && room.fruit[1] == y) EatFruit(snake, room);
 	X_YList = [x , y];
 	snake.blocks.push(X_YList);		
@@ -196,7 +197,7 @@ function Dead(snake, room) {
 	console.log(howManyAlive);
 	if(howManyAlive == 1) {
 		room.active = false; //ends game
-		room.end = true;	
+		room.isGameOver = true;	
 	}
 }
 
@@ -206,12 +207,12 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
-					var setNewDirrection = false;
-					if ((rooms[i].snakes[j].dirrection != "down" && InfoFromClient.direction == "up") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if ((rooms[i].snakes[j].dirrection != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if ((rooms[i].snakes[j].dirrection != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if ((rooms[i].snakes[j].dirrection != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if (setNewDirrection) rooms[i].snakes[j].dirrection = InfoFromClient.direction;
+					var setNewDirection = false;
+					if ((rooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
+					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
+					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
+					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
+					if (setNewDirection) rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
 					res.send({
 						"result":"success"
 					});
@@ -237,21 +238,22 @@ app.get('/EndGame/:RoomID', function (req, res) {
 });
 
 
-function Snake(ID, blocks, roomCode, dirrection, growing, alive) {
+function Snake(ID, blocks, roomCode) {
 	this.ID = ID;
 	this.blocks = blocks;
 	this.roomCode = roomCode;
-	this.dirrection = dirrection;
-	this.growing = growing;
-	this.alive = alive;
+	this.direction = "right";
+	this.directionReqest = "right";
+	this.growing = 0;
+	this.alive = true;
 }
 
-function Room(ID, snakes, active, fruit) {
+function Room(ID, snakes) {
 	this.ID = ID;
 	this.snakes = snakes;
-	this.active = active;
-	this.fruit = fruit;
-	this.end = false;
+	this.active = false;
+	this.fruit = [];
+	this.isGameOver = false;
 }
 
 app.get('/test/', function(req, res) {
