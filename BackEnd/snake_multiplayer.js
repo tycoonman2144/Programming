@@ -251,6 +251,7 @@ function Room(ID, snakes, active, fruit) {
 	this.snakes = snakes;
 	this.active = active;
 	this.fruit = fruit;
+	this.end = false;
 }
 
 
