@@ -254,7 +254,12 @@ function Room(ID, snakes, active, fruit) {
 	this.end = false;
 }
 
-
+app.get('/test/', function(req, res) {
+	console.log("YES");	
+	res.send({
+		"result":"success"
+	});
+});
 
 
 
