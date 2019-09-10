@@ -201,7 +201,12 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
-					rooms[i].snakes[j].dirrection = InfoFromClient.direction;
+					var setNewDirrection = false;
+					if ((InfoFromClient.direction != "down" && snakes[j].dirrection == "up") || snake.length == 1) setNewDirrection = true;
+					if ((InfoFromClient.direction != "right" && snakes[j].dirrection == "left") || snake.length == 1) setNewDirrection = true;
+					if ((InfoFromClient.direction != "up" && snakes[j].dirrection == "down") || snake.length == 1) setNewDirrection = true;
+					if ((InfoFromClient.direction != "left" && snakes[j].dirrection == "right") || snake.length == 1) setNewDirrection = true;
+					if (setNewDirrection) rooms[i].snakes[j].dirrection = InfoFromClient.direction;
 					res.send({
 						"result":"success"
 					});
