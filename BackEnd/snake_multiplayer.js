@@ -157,7 +157,7 @@ function Move(snake, room) {
 	}
 	for (var i = 0; i < room.snakes.length; i++) {
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
-			if (room.snakes[i].blocks[j] == [x, y]) Dead(snake, room);  //if someone died
+			if (room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) Dead(snake, room);  //if someone died
 		}
 	}
 	//Color();		ADD THIS LATER
