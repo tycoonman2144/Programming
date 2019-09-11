@@ -206,16 +206,12 @@ app.get('/Direction/:infoToServer', function (req, res) {
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
 					var setNewDirection = false;
-					if ((rooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
+					if ((rooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
+					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
+					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
+					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
 					console.log(InfoFromClient.direction);
-					if (setNewDirection)
-					{
-						rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
-						console.log("got direction");
-					}
+					if (setNewDirection) rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
 					res.send({
 						"result":"success"
 					});
