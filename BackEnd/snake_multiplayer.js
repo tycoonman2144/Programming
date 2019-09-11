@@ -210,6 +210,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
 					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
 					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
+					console.log(InfoFromClient.direction);
 					if (setNewDirection)
 					{
 						rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
