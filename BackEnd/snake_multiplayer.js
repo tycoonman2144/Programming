@@ -123,7 +123,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 					for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
 						if(rooms[i].snakes[j].alive == true) {
 							rooms[i].snakes[j].direction = rooms[i].snakes[j].directionReqest;
-							console.log( rooms[i].snakes[j].directionReqest);
 							Move(rooms[i].snakes[j], rooms[i]); //this includes growing, makeing/eating fruit, dieing
 						}
 					}
@@ -211,8 +210,11 @@ app.get('/Direction/:infoToServer', function (req, res) {
 					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
 					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
 					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirrection = true;
-					if (setNewDirection) rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
-					console.log("got direction");
+					if (setNewDirection)
+					{
+						rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
+						console.log("got direction");
+					}
 					res.send({
 						"result":"success"
 					});
