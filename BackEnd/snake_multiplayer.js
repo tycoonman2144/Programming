@@ -8,7 +8,7 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 var bodyParser = require("body-parser");
 
 var rooms = [];
-var moveInterval;
+var moveInterval = null;
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
 
@@ -117,18 +117,20 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	for(var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == RoomID) rooms[i].active = true;	
 	}
-	moveInterval = setInterval( function(){ 
-			for (var i = 0; i < rooms.length; i++) {
-				if(rooms[i].active == true) { // if im looking at a room that has started
-					for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
-						if(rooms[i].snakes[j].alive == true) {
-							rooms[i].snakes[j].direction = rooms[i].snakes[j].directionReqest;
-							Move(rooms[i].snakes[j], rooms[i]); //this includes growing, makeing/eating fruit, dieing
+	if (moveInterval == null) {
+		moveInterval = setInterval( function(){ 
+				for (var i = 0; i < rooms.length; i++) {
+					if(rooms[i].active == true) { // if im looking at a room that has started
+						for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
+							if(rooms[i].snakes[j].alive == true) {
+								rooms[i].snakes[j].direction = rooms[i].snakes[j].directionReqest;
+								Move(rooms[i].snakes[j], rooms[i]); //this includes growing, makeing/eating fruit, dieing
+							}
 						}
 					}
 				}
-			}
-		},100);
+			},100);
+	}
 	res.send({
 		"result":"success"
 	});
@@ -230,7 +232,10 @@ app.get('/EndGame/:RoomID', function (req, res) {
 	for(var i = 0; i < rooms.length; i++) {
 		if(rooms[i].active == true) NumberOfRoomsActive++;
 	}
-	if (NumberOfRoomsActive == 0) clearInterval(moveInterval);
+	if (NumberOfRoomsActive == 0) {
+		clearInterval(moveInterval);
+		moveInterval = null;	
+	}
 	res.send({
 		"result":"success"
 	});
