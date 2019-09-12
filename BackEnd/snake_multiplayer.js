@@ -203,22 +203,42 @@ function Dead(snake, room) {
 
 app.get('/Direction/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
+	if (rooms.length == 0) {
+		res.send({
+			"result":"error",
+			"err":"There are no rooms yet"
+		});
+		return;
+	}
 	for (var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
 					var setNewDirection = false;
-					if ((rooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
-					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
-					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
-					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || rooms[i].snakes[j].blocks.length == 1) setNewDirection = true;
-					console.log(InfoFromClient.direction);
+					var lengthOf1 = rooms[i].snakes[j].blocks.length == 1;
+					if ((rooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
+					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
+					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
+					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
 					if (setNewDirection) rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
 					res.send({
 						"result":"success"
 					});
+					return;
+				} else {
+					res.send({
+						"result":"error",
+						"err":"Your snake is dead"
+					});
+					return;
 				}
 			}
+		} else {
+			res.send({
+				"result":"error",
+				"err":"The room has not started"
+			});
+			return;
 		}
 	}
 });
