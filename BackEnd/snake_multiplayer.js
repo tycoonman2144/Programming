@@ -278,13 +278,13 @@ app.get('/test/', function(req, res) {
 
 
 
-app.get('/test', function (req, res) {
+/*app.get('/test', function (req, res) {
   res.send('tested');
 });
 
 
 
-/*
+
 
 app.get('/oddOrEven/:number', function(req,res) {
 	if (req.params.number % 2 == 0)
