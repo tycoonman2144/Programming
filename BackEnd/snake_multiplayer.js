@@ -83,17 +83,19 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					"result":"success",
 					"ID":ClientID
 				});
-				break;
+				return;
 			}
 		}
 		if(foundRoom == false) {
 			res.send({
 				"result":"error",
+				"err":"Cannot Find Room"
 			});	
 		}
 	} else {
 		res.send({
-			"result":"error"
+			"result":"error",
+			"err":"There are no rooms"
 		});
 	}
 });
