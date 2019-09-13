@@ -213,7 +213,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		return;
 	}
 	for (var i = 0; i < rooms.length; i++) {
-		console.log("room length: " + .rooms.length)
+		console.log("room length: " + rooms.length)
 		console.log(InfoFromClient.roomID + "=" + rooms[i].ID);
 		console.log(rooms[i].active);
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
