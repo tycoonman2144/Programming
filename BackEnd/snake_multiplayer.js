@@ -213,7 +213,10 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		return;
 	}
 	for (var i = 0; i < rooms.length; i++) {
+		console.log(InfoFromClient.roomID + "=" + rooms[i].ID);
+		console.log(rooms[i].active);
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
+			console.log("got in");
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
 					var setNewDirection = false;
