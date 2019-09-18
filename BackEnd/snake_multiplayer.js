@@ -107,6 +107,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
+	CheckIfExited();
   	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
 		if(rooms[i].ID == RoomID) {
 			CurrentRoom = rooms[i];	
@@ -126,8 +127,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	if (moveInterval == null) {
 		moveInterval = setInterval( function(){ 
 				for (var i = 0; i < rooms.length; i++) {
-					CheckIfExited(rooms[i]);
-					console.log("test");
 					if(rooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(rooms[i].snakes[j].alive == true) {
@@ -144,11 +143,13 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	});
 });
 
-function CheckIfExited(room) {
+function CheckIfExited() {
 	var d = new Date();
-	for(var i = 0; i < room.snakes.length; i++) {
-		if(Number("" + d.getMinutes() + d.getSeconds()) - room.snakes[i].timeStamp >= 10){ //them most likley exited
-			room.snakes.splice(i, 1);
+	for(var i = 0; i < rooms.length; i++){
+		for(var j = 0; j < room[i].snakes.length; j++) {
+			if(Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp >= 10){ //them most likley exited
+				rooms[i].snakes[j].splice(j, 1);
+			}
 		}
 	}
 }
@@ -288,7 +289,11 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
-					rooms[i].snakes[j].timeStamp = InfoFromClient.time;	
+					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
+					res.send({
+						"result":"error",
+					});
+					return;
 				}
 			}
 		}
