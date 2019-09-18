@@ -141,7 +141,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	});
 });
 
-function CheckIfExited(room) 
+function CheckIfExited(room) {
 	var d = new Date();
 	for(var i = 0; i < room.snakes.length; i++) {
 		if((int)("" + d.getMinutes() + d.getSeconds()) - room.snakes[i].timeStamp >= 10){ //them most likley exited
