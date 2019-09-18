@@ -148,7 +148,7 @@ function CheckIfExited() {
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
 			if(Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp >= 10){ //them most likley exited
-				rooms[i].snakes[j].splice(j, 1);
+				rooms[i].snakes.splice(j, 1);
 			}
 		}
 	}
