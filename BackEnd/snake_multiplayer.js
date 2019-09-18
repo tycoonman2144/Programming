@@ -147,7 +147,8 @@ function CheckIfExited() {
 	var d = new Date();
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
-			if(Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp >= 10){ //them most likley exited
+			console.log(Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp);
+			if((Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp) >= 10){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
@@ -291,7 +292,7 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
 					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
 					res.send({
-						"result":"error",
+						"result":"success",
 					});
 					return;
 				}
