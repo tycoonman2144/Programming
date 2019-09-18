@@ -140,11 +140,9 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 });
 
 function CheckIfExited() {
-	var d = new Date();
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
-			console.log(Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp);
-			if((Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp) >= 4000){ //them most likley exited
+			if(Date.now() - rooms[i].snakes[j].timeStamp) >= 4000){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
