@@ -50,7 +50,8 @@ app.get('/setUpRoom', function (req, res) {
 	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var snake = new Snake(0, [[randX,randY]], result); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var d = new Date();
+	var snake = new Snake(0, [[randX,randY]], result, (int)("" + d.getMinutes() + d.getSeconds())); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
 	var room = new Room(result, [snake]);
 	rooms.push(room);
 	EatFruit(null, room);
@@ -77,7 +78,8 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var ClientID = rooms[i].snakes.length;
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID);
+				var d = new Date();
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, (int)("" + d.getMinutes() + d.getSeconds()));
 				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
@@ -122,6 +124,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	if (moveInterval == null) {
 		moveInterval = setInterval( function(){ 
 				for (var i = 0; i < rooms.length; i++) {
+					CheckIfExited(rooms[i]);
 					if(rooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(rooms[i].snakes[j].alive == true) {
@@ -137,6 +140,15 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 		"result":"success"
 	});
 });
+
+function CheckIfExited(room) 
+	var d = new Date();
+	for(var i = 0; i < room.snakes.length; i++) {
+		if((int)("" + d.getMinutes() + d.getSeconds()) - room.snakes[i].timeStamp >= 10){ //them most likley exited
+			room.snakes.splice(i, 1);
+		}
+	}
+}
 
 function Move(snake, room) {
 	var X_YList = [];
@@ -267,8 +279,21 @@ app.get('/EndGame/:RoomID', function (req, res) {
 	});
 });
 
+app.get('/ImStillHere:infoToServer', function(req, res) {
+	var InfoFromClient = JSON.parse(req.params.infoToServer);
+	for (var i = 0; i < rooms.length; i++) {
+		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
+			for(var j = 0; j < rooms[i].snakes.length; j++) {
+				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
+					rooms[i].snakes[j].timeStamp = InfoFromClient.time;	
+				}
+			}
+		}
+	}
+});
 
-function Snake(ID, blocks, roomCode) {
+
+function Snake(ID, blocks, roomCode, timeStamp) {
 	this.ID = ID;
 	this.blocks = blocks;
 	this.roomCode = roomCode;
@@ -276,6 +301,7 @@ function Snake(ID, blocks, roomCode) {
 	this.directionReqest = "right";
 	this.growing = 0;
 	this.alive = true;
+	this.timeStamp = timeStamp;
 }
 
 function Room(ID, snakes) {
