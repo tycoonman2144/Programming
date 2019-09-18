@@ -51,7 +51,7 @@ app.get('/setUpRoom', function (req, res) {
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
 	var d = new Date();
-	var snake = new Snake(0, [[randX,randY]], result, (int)("" + d.getMinutes() + d.getSeconds())); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var snake = new Snake(0, [[randX,randY]], result, ((int)("" + d.getMinutes() + d.getSeconds()))); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
 	var room = new Room(result, [snake]);
 	rooms.push(room);
 	EatFruit(null, room);
@@ -79,7 +79,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 				}
 				var ClientID = rooms[i].snakes.length;
 				var d = new Date();
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, (int)("" + d.getMinutes() + d.getSeconds()));
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, ((int)("" + d.getMinutes() + d.getSeconds())));
 				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
