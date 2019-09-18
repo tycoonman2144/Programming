@@ -50,9 +50,7 @@ app.get('/setUpRoom', function (req, res) {
 	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var d = new Date();
-	var time = Number("" + d.getMinutes() + d.getSeconds());
-	var snake = new Snake(0, [[randX,randY]], result, time); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var snake = new Snake(0, [[randX,randY]], result, Date.now()); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
 	var room = new Room(result, [snake]);
 	rooms.push(room);
 	EatFruit(null, room);
@@ -79,9 +77,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var ClientID = rooms[i].snakes.length;
-				var d = new Date();
-				var time = Number("" + d.getMinutes() + d.getSeconds());
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, time);
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, Date.now);
 				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
@@ -148,7 +144,7 @@ function CheckIfExited() {
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
 			console.log(Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp);
-			if((Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp) >= 10){ //them most likley exited
+			if((Number("" + d.getMinutes() + d.getSeconds()) - rooms[i].snakes[j].timeStamp) >= 4000){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
