@@ -127,6 +127,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 		moveInterval = setInterval( function(){ 
 				for (var i = 0; i < rooms.length; i++) {
 					CheckIfExited(rooms[i]);
+					console.log("test");
 					if(rooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(rooms[i].snakes[j].alive == true) {
@@ -281,7 +282,7 @@ app.get('/EndGame/:RoomID', function (req, res) {
 	});
 });
 
-app.get('/ImStillHere:infoToServer', function(req, res) {
+app.get('/ImStillHere/:infoToServer', function(req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
 	for (var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
