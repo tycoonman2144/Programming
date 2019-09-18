@@ -282,7 +282,9 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
 	for (var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
+			console.log("found room");
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
+				console.log(rooms[i].snakes[j].ID == InfoFromClient.ID);
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
 					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
 					console.log("sending");
