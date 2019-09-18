@@ -146,7 +146,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 function CheckIfExited(room) {
 	var d = new Date();
 	for(var i = 0; i < room.snakes.length; i++) {
-		if((int)("" + d.getMinutes() + d.getSeconds()) - room.snakes[i].timeStamp >= 10){ //them most likley exited
+		if(Number("" + d.getMinutes() + d.getSeconds()) - room.snakes[i].timeStamp >= 10){ //them most likley exited
 			room.snakes.splice(i, 1);
 		}
 	}
