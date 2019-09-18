@@ -285,6 +285,7 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
 					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
+					console.log("sending");
 					res.send({
 						"result":"success"
 					});
