@@ -142,7 +142,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 function CheckIfExited() {
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
-			if(Date.now() - rooms[i].snakes[j].timeStamp) >= 4000){ //them most likley exited
+			if(Date.now() - rooms[i].snakes[j].timeStamp >= 4000){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
