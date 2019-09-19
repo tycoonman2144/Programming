@@ -143,7 +143,7 @@ function CheckIfExited() {
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
 			console.log(Date.now() - rooms[i].snakes[j].timeStamp);
-			if(Date.now() - rooms[i].snakes[j].timeStamp >= 4000){ //them most likley exited
+			if((Date.now() + 5000) - rooms[i].snakes[j].timeStamp >= 4000){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
