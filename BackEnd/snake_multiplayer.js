@@ -285,7 +285,7 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
-					if(rooms[i].snakes[j].timeDiffrence == 0) rooms[i].snakes[j].timeDiffrence = (Date.now() - rooms[i].snakes[j].timeStamp);
+					if(rooms[i].snakes[j].timeDiffrence == 0) rooms[i].snakes[j].timeDiffrence = (rooms[i].snakes[j].timeStamp - Date.now());
 					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
 					res.send({
 						"result":"success"
