@@ -143,7 +143,7 @@ function CheckIfExited() {
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
 			console.log(Date.now() - rooms[i].snakes[j].timeStamp);
-			if((Date.now() + 5000) - rooms[i].snakes[j].timeStamp >= 4000){ //them most likley exited
+			if((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp >= 4000){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
@@ -285,6 +285,7 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
+					if(rooms[i].snakes[j].timeDiffrence == 0) rooms[i].snakes[j].timeDiffrence = (Date.now() - rooms[i].snakes[j].timeStamp);
 					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
 					res.send({
 						"result":"success"
@@ -306,6 +307,7 @@ function Snake(ID, blocks, roomCode, timeStamp) {
 	this.growing = 0;
 	this.alive = true;
 	this.timeStamp = timeStamp;
+	this.timeDiffrence = 0;
 }
 
 function Room(ID, snakes) {
