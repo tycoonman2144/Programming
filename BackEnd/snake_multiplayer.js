@@ -148,7 +148,7 @@ function CheckIfExited() {
 			console.log("Time Stamp: " + rooms[i].snakes[j].timeStamp);
 			console.log("DateNow: " + Date.now());
 			console.log("Time Diffrence: " + ((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp));
-			if((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp >= 4000){ //them most likley exited
+			if(((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
 				rooms[i].snakes.splice(j, 1);
 			}
 		}
