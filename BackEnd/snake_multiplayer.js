@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // this middleware serv
 
 // Initialize server
 var server = app.listen(port, function () {
-  //console.log('Listening on port %d', server.address().port);
+  console.log('Listening on port %d', server.address().port);
 });
 
 app.use(function(req, res, next) {
