@@ -144,12 +144,9 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 function CheckIfExited() {
 	for(var i = 0; i < rooms.length; i++){
 		for(var j = 0; j < rooms[i].snakes.length; j++) {
-			//console.log("TimeDiffrence: " + rooms[i].snakes[j].timeDiffrence);
-			//console.log("Time Stamp: " + rooms[i].snakes[j].timeStamp);
-			//console.log("DateNow: " + Date.now());
-			//console.log("Time Diffrence: " + ((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp));
 			if(((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
-				rooms[i].snakes.splice(j, 1);
+				rooms[i].snakes.splice(j, 1); //deletes snake from room
+				if(rooms[i].snakes.length <= 1) EndGame(rooms[i].ID); // so can clear interval
 			}
 		}
 	}
@@ -230,7 +227,6 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		return;
 	}
 	for (var i = 0; i < rooms.length; i++) {
-		console.log(rooms[i].active);
 		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
 			for(var j = 0; j < rooms[i].snakes.length; j++) {
 				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
@@ -269,6 +265,13 @@ app.get('/Direction/:infoToServer', function (req, res) {
 
 app.get('/EndGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
+	EndGame(RoomID);
+	res.send({
+		"result":"success"
+	});
+});
+	
+function EndGame(RoomID) {
 	for(var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == RoomID) rooms.splice(i, 1);	
 	}
@@ -280,10 +283,7 @@ app.get('/EndGame/:RoomID', function (req, res) {
 		clearInterval(moveInterval);
 		moveInterval = null;	
 	}
-	res.send({
-		"result":"success"
-	});
-});
+}
 
 app.get('/ImStillHere/:infoToServer', function(req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
@@ -323,21 +323,22 @@ function Room(ID, snakes) {
 	this.isGameOver = false;
 }
 
+
+
+
+
+
+
+
+
+
+
 app.get('/test/', function(req, res) {
 	console.log("YES");	
 	res.send({
 		"result":"success"
 	});
 });
-
-
-
-
-
-
-
-
-
 
 
 
