@@ -40,7 +40,8 @@ function GetRandomID() {
 	return result;
 }
 
-app.get('/setUpRoom', function (req, res) {
+app.get('/setUpRoom/:time', function (req, res) {
+	var time = req.params.time;
 	var result = GetRandomID();
 	for (var i = 0; i < rooms.length; i++) {
 		if(rooms[i].ID == result) {
@@ -50,7 +51,7 @@ app.get('/setUpRoom', function (req, res) {
 	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var snake = new Snake(0, [[randX,randY]], result, Date.now()); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var snake = new Snake(0, [[randX,randY]], result, time); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
 	var room = new Room(result, [snake]);
 	rooms.push(room);
 	EatFruit(null, room);
@@ -60,8 +61,9 @@ app.get('/setUpRoom', function (req, res) {
 	});
 });
 
-app.get('/JoinRoom/:AttemptID', function (req, res) {
-	var AttemptID = req.params.AttemptID;
+app.get('/JoinRoom/:infoToServer', function (req, res) {
+	var InfoFromClient = JSON.parse(req.params.infoToServer);
+	var AttemptID = InfoFromClient.AttemptID;
 	var foundRoom = false;
 	if(rooms != []) {
 		for(var i = 0; i < rooms.length; i++) {
@@ -77,7 +79,7 @@ app.get('/JoinRoom/:AttemptID', function (req, res) {
 					}
 				}
 				var ClientID = rooms[i].snakes.length;
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, Date.now);
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, InfoFromClient.time);
 				rooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
