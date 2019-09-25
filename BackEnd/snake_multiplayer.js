@@ -124,10 +124,8 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
-	console.log(RoomID);
 	CheckIfExited(RoomID);
 	if(RoomID != "null") { //if your not in the public room
-		console.log("got in wrong place");
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
 			if(PrivRooms[i].ID == RoomID) {
 				CurrentRoom = PrivRooms[i];	
@@ -135,7 +133,6 @@ app.get('/getInfo/:RoomID', function (req, res) {
 		}
 	} else { //if in the public room
 		CurrentRoom = PublicRoom;
-		console.log("got here");
 	}
 	res.send({
 		"result":"success",
@@ -145,7 +142,7 @@ app.get('/getInfo/:RoomID', function (req, res) {
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
-	if(RoomID != null) { // if not in a public room
+	if(RoomID != "null") { // if not in a public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;	
 		}
@@ -176,7 +173,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 });
 
 function CheckIfExited(RoomID) {
-	if(RoomID != null) { //if not in public room
+	if(RoomID != "null") { //if not in public room
 		for(var i = 0; i < PrivRooms.length; i++){
 			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
 				if(((Date.now() - PrivRooms[i].snakes[j].timeDiffrence) - PrivRooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
@@ -248,7 +245,7 @@ function EatFruit(snake, room) {
 }
 
 function Dead(snake, room) {
-	if(room.RoomID != null) { // if not in public room
+	if(room.RoomID != "null") { // if not in public room
 		snake.alive = false;
 		var howManyAlive = 0;
 		for(var i = 0; i < room.snakes.length; i++) {
@@ -350,7 +347,7 @@ function EndGame(RoomID) {
 	for(var i = 0; i < PrivRooms.length; i++) {
 		if(PrivRooms[i].active == true) NumberOfPrivateRoomsActive++;
 	}
-	if(RoomID != null) { //if not in public room
+	if(RoomID != "null") { //if not in public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == RoomID) PrivRooms.splice(i, 1);	
 		}
