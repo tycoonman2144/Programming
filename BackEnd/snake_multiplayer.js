@@ -64,8 +64,8 @@ app.get('/setUpRoom/:time', function (req, res) {
 
 app.get('/JoinRoom/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	var joinPublicRoom = InfoFromClient.PublicRoom;  //ADD THIS TO CLIENT SIDE
 	var AttemptID = InfoFromClient.AttemptID;
+	var joinPublicRoom = AttemptID == null ? true : false;
 	var timeStamp = InfoFromClient.time;
 	var foundRoom = false;
 	if(!joinPublicRoom) { //if not trying to join public room
@@ -124,11 +124,15 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
-	CheckIfExited();
-  	for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
-		if(PrivRooms[i].ID == RoomID) {
-			CurrentRoom = PrivRooms[i];	
+	CheckIfExited(RoomID);
+	if(RoomID != null) { //if your not in the public room
+		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
+			if(PrivRooms[i].ID == RoomID) {
+				CurrentRoom = PrivRooms[i];	
+			}
 		}
+	} else { //if in the public room
+		CurrentRoom = PublicRoom;
 	}
 	res.send({
 		"result":"success",
@@ -138,12 +142,14 @@ app.get('/getInfo/:RoomID', function (req, res) {
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
-	for(var i = 0; i < PrivRooms.length; i++) {
-		if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;	
+	if(RoomID != null) { // if not in a public room
+		for(var i = 0; i < PrivRooms.length; i++) {
+			if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;	
+		}
 	}
 	if (moveInterval == null) {
-		moveInterval = setInterval( function(){ 
-				for (var i = 0; i < PrivRooms.length; i++) {
+		moveInterval = setInterval( function(){
+				for (var i = 0; i < PrivRooms.length; i++) { //for private rooms
 					if(PrivRooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < PrivRooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(PrivRooms[i].snakes[j].alive == true) {
@@ -153,6 +159,12 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 						}
 					}
 				}
+				for(var i = 0; i < PublicRoom.snakes.length; i++) { //for public room
+					if(PublicRoom.snakes[i].alive == true) {
+						PublicRoom.snakes[i].direction = PublicRoom.snakes[i].directionReqest;
+						Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
+					}
+				}
 			},90);
 	}
 	res.send({
@@ -160,12 +172,20 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	});
 });
 
-function CheckIfExited() {
-	for(var i = 0; i < PrivRooms.length; i++){
-		for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
-			if(((Date.now() - PrivRooms[i].snakes[j].timeDiffrence) - PrivRooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
-				PrivRooms[i].snakes.splice(j, 1); //deletes snake from room
-				if(PrivRooms[i].snakes.length <= 1) EndGame(PrivRooms[i].ID); // so can clear interval
+function CheckIfExited(RoomID) {
+	if(RoomID != null) { //if not in public room
+		for(var i = 0; i < PrivRooms.length; i++){
+			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+				if(((Date.now() - PrivRooms[i].snakes[j].timeDiffrence) - PrivRooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
+					PrivRooms[i].snakes.splice(j, 1); //deletes snake from room
+					if(PrivRooms[i].snakes.length <= 1) EndGame(PrivRooms[i].ID); // so can clear interval
+				}
+			}
+		}
+	} else { // if in public room
+		for(var j = 0; j < PublicRoom.snakes.length; j++) {
+			if(((Date.now() - PublicRoom.snakes[i].timeDiffrence) - PublicRoom.snakes[i].timeStamp) >= 6000){ //them most likley exited
+				PublicRoom.snakes[i].splice(j, 1); //deletes snake from room
 			}
 		}
 	}
@@ -225,58 +245,89 @@ function EatFruit(snake, room) {
 }
 
 function Dead(snake, room) {
-	snake.alive = false;
-	var howManyAlive = 0;
-	for(var i = 0; i < room.snakes.length; i++) {
-		if(room.snakes[i].alive == true) howManyAlive++;
-	}
-	if(howManyAlive == 1) {
-		room.active = false; //ends game
-		room.isGameOver = true;	
+	if(room.RoomID != null) { // if not in public room
+		snake.alive = false;
+		var howManyAlive = 0;
+		for(var i = 0; i < room.snakes.length; i++) {
+			if(room.snakes[i].alive == true) howManyAlive++;
+		}
+		if(howManyAlive == 1) {
+			room.active = false; //ends game
+			room.isGameOver = true;	
+		}
+	} else { //in public room
+		for(var i = 0; i < PublicRoom.snakes.length; i++) {
+			if(PublicRoom.snakes[i] == snake) PublicRoom.splice(i, 1);
+		}
 	}
 }
 
 app.get('/Direction/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	if (PrivRooms.length == 0) {
-		res.send({
-			"result":"error",
-			"err":"There are no private rooms yet"
-		});
-		return;
-	}
-	for (var i = 0; i < PrivRooms.length; i++) {
-		if(PrivRooms[i].ID == InfoFromClient.roomID && PrivRooms[i].active == true) { //if same room as client
-			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
-				if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID && PrivRooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
-					var setNewDirection = false;
-					var lengthOf1 = PrivRooms[i].snakes[j].blocks.length == 1;
-					if ((PrivRooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
-					if ((PrivRooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
-					if ((PrivRooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
-					if ((PrivRooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
-					if (setNewDirection) PrivRooms[i].snakes[j].directionReqest = InfoFromClient.direction;
-					res.send({
-						"result":"success"
-					});
-					return;
-				} else {
-					if(j == PrivRooms[i].snakes.length - 1){
+	if (InfoFromClient.roomID != null) { // if not in a public room
+		if (PrivRooms.length == 0) {
+			res.send({
+				"result":"error",
+				"err":"There are no private rooms yet"
+			});
+			return;
+		}
+		for (var i = 0; i < PrivRooms.length; i++) {
+			if(PrivRooms[i].ID == InfoFromClient.roomID && PrivRooms[i].active == true) { //if same room as client
+				for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+					if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID && PrivRooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
+						var setNewDirection = false;
+						var lengthOf1 = PrivRooms[i].snakes[j].blocks.length == 1;
+						if ((PrivRooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
+						if ((PrivRooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
+						if ((PrivRooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
+						if ((PrivRooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
+						if (setNewDirection) PrivRooms[i].snakes[j].directionReqest = InfoFromClient.direction;
 						res.send({
-							"result":"error",
-							"err":"Your snake is dead"
+							"result":"success"
 						});
 						return;
+					} else {
+						if(j == PrivRooms[i].snakes.length - 1){
+							res.send({
+								"result":"error",
+								"err":"Your snake is dead"
+							});
+							return;
+						}
 					}
 				}
+			} else {
+				if(i == PrivRooms.length - 1) {
+					res.send({
+						"result":"error",
+						"err":"The room has not started"
+					});
+					return;
+				}
 			}
-		} else {
-			if(i == PrivRooms.length - 1) {
+		}
+	} else { // in a public room
+		for(var i = 0; i < PublicRoom.snakes.length; i++) {
+			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
+				var setNewDirection = false;
+				var lengthOf1 = PrivRooms.snakes[i].blocks.length == 1;
+				if ((PublicRoom.snakes[i].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
+				if ((PublicRoom.snakes[i].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
+				if ((PublicRoom.snakes[i].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
+				if ((PublicRoom.snakes[i].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
+				if (setNewDirection) PublicRoom.snakes[i].directionReqest = InfoFromClient.direction;
+				res.send({
+					"result":"success"
+				});
+				return;	
+			} else {
+				if(i == PublicRoom.snakes[i].length - 1){
 				res.send({
 					"result":"error",
-					"err":"The room has not started"
+					"err":"Your snake is dead"
 				});
-				return;
+				return;		
 			}
 		}
 	}
@@ -291,31 +342,50 @@ app.get('/EndGame/:RoomID', function (req, res) {
 });
 	
 function EndGame(RoomID) {
+	var NumberOfPrivateRoomsActive = 0;
 	for(var i = 0; i < PrivRooms.length; i++) {
-		if(PrivRooms[i].ID == RoomID) PrivRooms.splice(i, 1);	
+		if(PrivRooms[i].active == true) NumberOfPrivateRoomsActive++;
 	}
-	var NumberOfRoomsActive = 0;
-	for(var i = 0; i < PrivRooms.length; i++) {
-		if(PrivRooms[i].active == true) NumberOfRoomsActive++;
-	}
-	if (NumberOfRoomsActive == 0) {
-		clearInterval(moveInterval);
-		moveInterval = null;	
+	if(RoomID != null) { //if not in public room
+		for(var i = 0; i < PrivRooms.length; i++) {
+			if(PrivRooms[i].ID == RoomID) PrivRooms.splice(i, 1);	
+		}
+		if (NumberOfPrivateRoomsActive == 0 && PublicRoom.snakes.length == 0) {
+			clearInterval(moveInterval);
+			moveInterval = null;	
+		}
+	} else {
+		if(PublicRoom.snakes.length == 0 && NumberOfPrivateRoomsActive == 0) {
+			clearInterval(moveInterval);
+			moveInterval = null;
+		}
 	}
 }
 
 app.get('/ImStillHere/:infoToServer', function(req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	for (var i = 0; i < PrivRooms.length; i++) {
-		if(PrivRooms[i].ID == InfoFromClient.roomID) { //if same room as client
-			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
-				if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID) {
-					PrivRooms[i].snakes[j].timeStamp = InfoFromClient.time;
-					res.send({
-						"result":"success"
-					});
-					return;
+	if (InfoFromClient.roomID != null) { //if not in public room 
+		for (var i = 0; i < PrivRooms.length; i++) {
+			if(PrivRooms[i].ID == InfoFromClient.roomID) { //if same room as client
+				for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+					if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID) {
+						PrivRooms[i].snakes[j].timeStamp = InfoFromClient.time;
+						res.send({
+							"result":"success"
+						});
+						return;
+					}
 				}
+			}
+		}
+	} else { // in public room
+		for(var i = 0; i < PublicRoom.snakes.length; i++) {
+			if(PublicRoom.snakes[i].ID == InfoFromClient.ID) {
+				PublicRoom.snakes[i].timeStamp = InfoFromClient.time;
+				res.send({
+					"result":"success"
+				});
+				return;
 			}
 		}
 	}
