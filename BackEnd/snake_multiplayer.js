@@ -7,7 +7,8 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 
 var bodyParser = require("body-parser");
 
-var rooms = [];
+var PrivRooms = [];
+var PublicRoom = new Room(null, []);
 var moveInterval = null;
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
@@ -43,8 +44,8 @@ function GetRandomID() {
 app.get('/setUpRoom/:time', function (req, res) {
 	var time = req.params.time;
 	var result = GetRandomID();
-	for (var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == result) {
+	for (var i = 0; i < PrivRooms.length; i++) {
+		if(PrivRooms[i].ID == result) {
 			result = GetRandomID(); //if its the same id as someone else's room, get a diffrent id
 			i = 0;
 		}
@@ -53,7 +54,7 @@ app.get('/setUpRoom/:time', function (req, res) {
 	var randY = Math.floor(Math.random() * 39);
 	var snake = new Snake(0, [[randX,randY]], result, time); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
 	var room = new Room(result, [snake]);
-	rooms.push(room);
+	PrivRooms.push(room);
 	EatFruit(null, room);
 	res.send({
 		"result":"success",
@@ -63,24 +64,26 @@ app.get('/setUpRoom/:time', function (req, res) {
 
 app.get('/JoinRoom/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
+	var joinPublicRoom = InfoFromClient.PublicRoom;  //ADD THIS TO CLIENT SIDE
 	var AttemptID = InfoFromClient.AttemptID;
+	var timeStamp = InfoFromClient.time;
 	var foundRoom = false;
-	if(rooms != []) {
-		for(var i = 0; i < rooms.length; i++) {
-			if(rooms[i].ID == AttemptID && rooms[i].active == false) { //if entered a valid id and if room is not active
+	if(!joinPublicRoom) { //if not trying to join public room
+		for(var i = 0; i < PrivRooms.length; i++) {
+			if(PrivRooms[i].ID == AttemptID && PrivRooms[i].active == false) { //if entered a valid id and if room is not active
 				foundRoom = true;
 				var randX = Math.floor(Math.random() * 79);
 				var randY = Math.floor(Math.random() * 39);
-				for (var j = 0; j < rooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
-					if(rooms[i].snakes[j].blocks[0] == randX && rooms[i].snakes[j].blocks[0] == randY) {
+				for (var j = 0; j < PrivRooms[i].snakes.length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
+					if(PrivRooms[i].snakes[j].blocks[0] == randX && PrivRooms[i].snakes[j].blocks[0] == randY) {
 						randX = Math.floor(Math.random() * 79);
 						randY = Math.floor(Math.random() * 39);
 						i = 0;
 					}
 				}
-				var ClientID = rooms[i].snakes.length;
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, InfoFromClient.time);
-				rooms[i].snakes.push(snake);
+				var ClientID = PrivRooms[i].snakes.length;
+				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, timeStamp);
+				PrivRooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
 					"ID":ClientID
@@ -94,11 +97,27 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 				"err":"Cannot Find Room"
 			});	
 		}
-	} else {
+	} else { //trying to join public room
+		var randX = Math.floor(Math.random() * 79);
+		var randY = Math.floor(Math.random() * 39);
+		for(var i = 0; i < PublicRoom.snakes.length; i++) {
+			for (var j = 0; j < PublicRoom.snakes[i].length; j++) { //makes sure if they spawned where others did and if so make a new spawning spot
+				if(PublicRoom.snakes[i].blocks[j] == randX && PublicRoom.snakes[i].blocks[j] == randY) {
+					randX = Math.floor(Math.random() * 79);
+					randY = Math.floor(Math.random() * 39);
+					i = 0;
+					j = 0;
+				}
+			}
+		}
+		var ClientID = PublicRoom.snakes.length;
+		var snake = new Snake(ClientID, [[randX,randY]], null, timeStamp);
+		PublicRoom[i].snakes.push(snake);
 		res.send({
-			"result":"error",
-			"err":"There are no rooms"
+			"result":"success",
+			"ID":ClientID
 		});
+		return;
 	}
 });
 
@@ -106,9 +125,9 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
 	CheckIfExited();
-  	for(var i = 0; i< rooms.length; i++) { //trys to find room with the id they sent in.
-		if(rooms[i].ID == RoomID) {
-			CurrentRoom = rooms[i];	
+  	for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
+		if(PrivRooms[i].ID == RoomID) {
+			CurrentRoom = PrivRooms[i];	
 		}
 	}
 	res.send({
@@ -119,17 +138,17 @@ app.get('/getInfo/:RoomID', function (req, res) {
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
-	for(var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == RoomID) rooms[i].active = true;	
+	for(var i = 0; i < PrivRooms.length; i++) {
+		if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;	
 	}
 	if (moveInterval == null) {
 		moveInterval = setInterval( function(){ 
-				for (var i = 0; i < rooms.length; i++) {
-					if(rooms[i].active == true) { // if im looking at a room that has started
-						for(var j = 0; j < rooms[i].snakes.length; j++) { //looks through the list of snakes
-							if(rooms[i].snakes[j].alive == true) {
-								rooms[i].snakes[j].direction = rooms[i].snakes[j].directionReqest;
-								Move(rooms[i].snakes[j], rooms[i]); //this includes growing, makeing/eating fruit, dieing
+				for (var i = 0; i < PrivRooms.length; i++) {
+					if(PrivRooms[i].active == true) { // if im looking at a room that has started
+						for(var j = 0; j < PrivRooms[i].snakes.length; j++) { //looks through the list of snakes
+							if(PrivRooms[i].snakes[j].alive == true) {
+								PrivRooms[i].snakes[j].direction = PrivRooms[i].snakes[j].directionReqest;
+								Move(PrivRooms[i].snakes[j], PrivRooms[i]); //this includes growing, makeing/eating fruit, dieing
 							}
 						}
 					}
@@ -142,11 +161,11 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 });
 
 function CheckIfExited() {
-	for(var i = 0; i < rooms.length; i++){
-		for(var j = 0; j < rooms[i].snakes.length; j++) {
-			if(((Date.now() - rooms[i].snakes[j].timeDiffrence) - rooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
-				rooms[i].snakes.splice(j, 1); //deletes snake from room
-				if(rooms[i].snakes.length <= 1) EndGame(rooms[i].ID); // so can clear interval
+	for(var i = 0; i < PrivRooms.length; i++){
+		for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+			if(((Date.now() - PrivRooms[i].snakes[j].timeDiffrence) - PrivRooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
+				PrivRooms[i].snakes.splice(j, 1); //deletes snake from room
+				if(PrivRooms[i].snakes.length <= 1) EndGame(PrivRooms[i].ID); // so can clear interval
 			}
 		}
 	}
@@ -219,30 +238,30 @@ function Dead(snake, room) {
 
 app.get('/Direction/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	if (rooms.length == 0) {
+	if (PrivRooms.length == 0) {
 		res.send({
 			"result":"error",
-			"err":"There are no rooms yet"
+			"err":"There are no private rooms yet"
 		});
 		return;
 	}
-	for (var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == InfoFromClient.roomID && rooms[i].active == true) { //if same room as client
-			for(var j = 0; j < rooms[i].snakes.length; j++) {
-				if(rooms[i].snakes[j].ID == InfoFromClient.ID && rooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
+	for (var i = 0; i < PrivRooms.length; i++) {
+		if(PrivRooms[i].ID == InfoFromClient.roomID && PrivRooms[i].active == true) { //if same room as client
+			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+				if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID && PrivRooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
 					var setNewDirection = false;
-					var lengthOf1 = rooms[i].snakes[j].blocks.length == 1;
-					if ((rooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
-					if ((rooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
-					if ((rooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
-					if ((rooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
-					if (setNewDirection) rooms[i].snakes[j].directionReqest = InfoFromClient.direction;
+					var lengthOf1 = PrivRooms[i].snakes[j].blocks.length == 1;
+					if ((PrivRooms[i].snakes[j].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
+					if ((PrivRooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
+					if ((PrivRooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
+					if ((PrivRooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
+					if (setNewDirection) PrivRooms[i].snakes[j].directionReqest = InfoFromClient.direction;
 					res.send({
 						"result":"success"
 					});
 					return;
 				} else {
-					if(j == rooms[i].snakes.length - 1){
+					if(j == PrivRooms[i].snakes.length - 1){
 						res.send({
 							"result":"error",
 							"err":"Your snake is dead"
@@ -252,7 +271,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 				}
 			}
 		} else {
-			if(i == rooms.length - 1) {
+			if(i == PrivRooms.length - 1) {
 				res.send({
 					"result":"error",
 					"err":"The room has not started"
@@ -272,12 +291,12 @@ app.get('/EndGame/:RoomID', function (req, res) {
 });
 	
 function EndGame(RoomID) {
-	for(var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == RoomID) rooms.splice(i, 1);	
+	for(var i = 0; i < PrivRooms.length; i++) {
+		if(PrivRooms[i].ID == RoomID) PrivRooms.splice(i, 1);	
 	}
 	var NumberOfRoomsActive = 0;
-	for(var i = 0; i < rooms.length; i++) {
-		if(rooms[i].active == true) NumberOfRoomsActive++;
+	for(var i = 0; i < PrivRooms.length; i++) {
+		if(PrivRooms[i].active == true) NumberOfRoomsActive++;
 	}
 	if (NumberOfRoomsActive == 0) {
 		clearInterval(moveInterval);
@@ -287,11 +306,11 @@ function EndGame(RoomID) {
 
 app.get('/ImStillHere/:infoToServer', function(req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	for (var i = 0; i < rooms.length; i++) {
-		if(rooms[i].ID == InfoFromClient.roomID) { //if same room as client
-			for(var j = 0; j < rooms[i].snakes.length; j++) {
-				if(rooms[i].snakes[j].ID == InfoFromClient.ID) {
-					rooms[i].snakes[j].timeStamp = InfoFromClient.time;
+	for (var i = 0; i < PrivRooms.length; i++) {
+		if(PrivRooms[i].ID == InfoFromClient.roomID) { //if same room as client
+			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+				if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID) {
+					PrivRooms[i].snakes[j].timeStamp = InfoFromClient.time;
 					res.send({
 						"result":"success"
 					});
