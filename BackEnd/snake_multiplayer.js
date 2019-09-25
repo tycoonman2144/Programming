@@ -81,12 +81,11 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 						i = 0;
 					}
 				}
-				var ClientID = PrivRooms[i].snakes.length;
-				var snake = new Snake(ClientID, [[randX,randY]], AttemptID, timeStamp);
+				var snake = new Snake(timeStamp, [[randX,randY]], AttemptID, timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
 				PrivRooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
-					"ID":ClientID
+					"ID":timeStamp
 				});
 				return;
 			}
@@ -110,12 +109,11 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 				}
 			}
 		}
-		var ClientID = PublicRoom.snakes.length;
-		var snake = new Snake(ClientID, [[randX,randY]], null, timeStamp);
+		var snake = new Snake(timeStamp, [[randX,randY]], null, timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
 		PublicRoom.snakes.push(snake);
 		res.send({
 			"result":"success",
-			"ID":ClientID
+			"ID":timeStamp
 		});
 		return;
 	}
