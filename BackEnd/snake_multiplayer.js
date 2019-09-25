@@ -311,7 +311,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
 			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
 				var setNewDirection = false;
-				var lengthOf1 = PrivRooms.snakes[i].blocks.length == 1;
+				var lengthOf1 = PublicRoom.snakes[i].blocks.length == 1;
 				if ((PublicRoom.snakes[i].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
 				if ((PublicRoom.snakes[i].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
 				if ((PublicRoom.snakes[i].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
