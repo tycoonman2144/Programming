@@ -133,11 +133,12 @@ app.get('/getInfo/:RoomID', function (req, res) {
 		}
 	} else { //if in the public room
 		CurrentRoom = PublicRoom;
+		console.log("got here");
 	}
 	res.send({
 		"result":"success",
 		"room":CurrentRoom
-	  });
+	});
 });
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
