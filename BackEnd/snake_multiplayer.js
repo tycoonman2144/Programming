@@ -110,10 +110,9 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 				}
 			}
 		}
-		console.log(PublicRoom);
 		var ClientID = PublicRoom.snakes.length;
 		var snake = new Snake(ClientID, [[randX,randY]], null, timeStamp);
-		PublicRoom[i].snakes.push(snake);
+		PublicRoom.snakes.push(snake);
 		res.send({
 			"result":"success",
 			"ID":ClientID
