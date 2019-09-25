@@ -126,7 +126,7 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	var CurrentRoom;
 	console.log(RoomID);
 	CheckIfExited(RoomID);
-	if(RoomID != null) { //if your not in the public room
+	if(RoomID != "null") { //if your not in the public room
 		console.log("got in wrong place");
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
 			if(PrivRooms[i].ID == RoomID) {
