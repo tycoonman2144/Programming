@@ -8,7 +8,7 @@ var config = require('./../../language-rescue/BackEnd/config/config.js'), // imp
 var bodyParser = require("body-parser");
 
 var PrivRooms = [];
-var PublicRoom = new Room(null, []);
+var PublicRoom = new Room("PublicRoom", []);
 PublicRoom.fruit = [5, 20];
 var moveInterval = null;
 
@@ -68,7 +68,7 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 	var AttemptID = InfoFromClient.AttemptID;
 	var timeStamp = InfoFromClient.time;
 	var foundRoom = false;
-	if(AttemptID != null || AttemptID != "null") { //if not trying to join public room
+	if(AttemptID != "PublicRoom") { //if not trying to join public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == AttemptID && PrivRooms[i].active == false) { //if entered a valid id and if room is not active
 				foundRoom = true;
@@ -125,7 +125,7 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
 	CheckIfExited(RoomID);
-	if(RoomID != "null" || RoomID != null) { //if your not in the public room
+	if(RoomID != "PublicRoom") { //if your not in the public room
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
 			if(PrivRooms[i].ID == RoomID) {
 				CurrentRoom = PrivRooms[i];	
@@ -142,7 +142,7 @@ app.get('/getInfo/:RoomID', function (req, res) {
 
 app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
-	if(RoomID != "null" || RoomID != null) { // if not in a public room
+	if(RoomID != "PublicRoom") { // if not in a public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;	
 		}
@@ -173,7 +173,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 });
 
 function CheckIfExited(RoomID) {
-	if(RoomID != "null" || RoomID != null) { //if not in public room
+	if(RoomID != "PublicRoom") { //if not in public room
 		for(var i = 0; i < PrivRooms.length; i++){
 			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
 				if(((Date.now() - PrivRooms[i].snakes[j].timeDiffrence) - PrivRooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
@@ -245,7 +245,7 @@ function EatFruit(snake, room) {
 }
 
 function Dead(snake, room) {
-	if(room.RoomID != "null" || room.RoomID != null) { // if not in public room
+	if(room.RoomID != "PublicRoom") { // if not in public room
 		snake.alive = false;
 		var howManyAlive = 0;
 		for(var i = 0; i < room.snakes.length; i++) {
@@ -264,7 +264,7 @@ function Dead(snake, room) {
 
 app.get('/Direction/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	if (InfoFromClient.roomID != null || InfoFromClient.roomID != "null") { // if not in a public room
+	if (InfoFromClient.roomID != "PublicRoom") { // if not in a public room
 		if (PrivRooms.length == 0) {
 			res.send({
 				"result":"error",
@@ -347,7 +347,7 @@ function EndGame(RoomID) {
 	for(var i = 0; i < PrivRooms.length; i++) {
 		if(PrivRooms[i].active == true) NumberOfPrivateRoomsActive++;
 	}
-	if(RoomID != "null" || RoomID != null) { //if not in public room
+	if(RoomID != "PublicRoom") { //if not in public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == RoomID) PrivRooms.splice(i, 1);	
 		}
@@ -365,7 +365,7 @@ function EndGame(RoomID) {
 
 app.get('/ImStillHere/:infoToServer', function(req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
-	if (InfoFromClient.roomID != null || InfoFromClient.roomID != "null") { //if not in public room 
+	if (InfoFromClient.roomID != "PublicRoom") { //if not in public room 
 		for (var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == InfoFromClient.roomID) { //if same room as client
 				for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
