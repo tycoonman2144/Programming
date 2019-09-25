@@ -183,9 +183,9 @@ function CheckIfExited(RoomID) {
 			}
 		}
 	} else { // if in public room
-		for(var j = 0; j < PublicRoom.snakes.length; j++) {
+		for(var i = 0; i < PublicRoom.snakes.length; i++) {
 			if(((Date.now() - PublicRoom.snakes[i].timeDiffrence) - PublicRoom.snakes[i].timeStamp) >= 6000){ //them most likley exited
-				PublicRoom.snakes[i].splice(j, 1); //deletes snake from room
+				PublicRoom.snakes[i].splice(i, 1); //deletes snake from room
 			}
 		}
 	}
