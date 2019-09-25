@@ -323,10 +323,11 @@ app.get('/Direction/:infoToServer', function (req, res) {
 				return;	
 			} else {
 				if(i == PublicRoom.snakes[i].length - 1){
-				res.send({
-					"result":"error",
-					"err":"Your snake is dead"
-				});
+					res.send({
+						"result":"error",
+						"err":"Your snake is dead"
+					});
+				}
 				return;		
 			}
 		}
