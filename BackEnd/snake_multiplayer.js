@@ -173,6 +173,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 
 function CheckIfExited(RoomID) {
 	if(RoomID != "null") { //if not in public room
+		console.log("wrong one");
 		for(var i = 0; i < PrivRooms.length; i++){
 			for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
 				if(((Date.now() - PrivRooms[i].snakes[j].timeDiffrence) - PrivRooms[i].snakes[j].timeStamp) >= 6000){ //them most likley exited
