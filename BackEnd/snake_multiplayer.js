@@ -65,10 +65,9 @@ app.get('/setUpRoom/:time', function (req, res) {
 app.get('/JoinRoom/:infoToServer', function (req, res) {
 	var InfoFromClient = JSON.parse(req.params.infoToServer);
 	var AttemptID = InfoFromClient.AttemptID;
-	var joinPublicRoom = AttemptID == null ? true : false;
 	var timeStamp = InfoFromClient.time;
 	var foundRoom = false;
-	if(!joinPublicRoom) { //if not trying to join public room
+	if(AttemptID != "null") { //if not trying to join public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == AttemptID && PrivRooms[i].active == false) { //if entered a valid id and if room is not active
 				foundRoom = true;
