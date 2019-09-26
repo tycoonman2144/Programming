@@ -109,7 +109,7 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 				}
 			}
 		}
-		var snake = new Snake(timeStamp, [[randX,randY]], null, timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
+		var snake = new Snake(timeStamp, [[randX,randY]], "PublicRoom", timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
 		PublicRoom.snakes.push(snake);
 		res.send({
 			"result":"success",
