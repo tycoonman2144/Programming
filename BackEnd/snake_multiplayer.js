@@ -10,6 +10,7 @@ var bodyParser = require("body-parser");
 var PrivRooms = [];
 var PublicRoom = new Room("PublicRoom", []);
 PublicRoom.fruit = [5, 20];
+PublicRoom.active = true;
 var moveInterval = null;
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
