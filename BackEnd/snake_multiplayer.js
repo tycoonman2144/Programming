@@ -161,7 +161,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 				for(var i = 0; i < PublicRoom.snakes.length; i++) { //for public room
 					if(PublicRoom.snakes[i].alive == true) {
 						PublicRoom.snakes[i].direction = PublicRoom.snakes[i].directionReqest;
-						if(i == 1) console.log(PublicRoom.snakes[i].direction);
+						if(i == 1) console.log(PublicRoom.snakes[i].directionReqest);
 						Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
 					}
 				}
