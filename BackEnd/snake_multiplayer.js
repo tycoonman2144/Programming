@@ -255,7 +255,7 @@ function Dead(snake, room) {
 		}
 	} else { //in public room
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
-			if(PublicRoom.snakes[i] == snake) PublicRoom.splice(i, 1);
+			if(PublicRoom.snakes[i] == snake) PublicRoom.snakes.splice(i, 1);
 		}
 	}
 }
