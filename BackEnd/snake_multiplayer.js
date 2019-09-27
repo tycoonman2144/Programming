@@ -63,7 +63,7 @@ app.get('/setUpRoom/:time', function (req, res) {
 	}
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
-	var snake = new Snake(0, [[randX,randY]], result, time, getRandomColor()); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var snake = new Snake(0, [[randX,randY]], result, time); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
 	var room = new Room(result, [snake]);
 	PrivRooms.push(room);
 	EatFruit(null, room);
@@ -91,7 +91,7 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 						j = 0;
 					}
 				}
-				var snake = new Snake(timeStamp, [[randX,randY]], AttemptID, timeStamp, getRandomColor()); //using there inatal time stamp as their id so that no one EVER has the same id
+				var snake = new Snake(timeStamp, [[randX,randY]], AttemptID, timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
 				PrivRooms[i].snakes.push(snake);
 				res.send({
 					"result":"success",
@@ -119,7 +119,7 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 				}
 			}
 		}
-		var snake = new Snake(timeStamp, [[randX,randY]], "PublicRoom", timeStamp, getRandomColor()); //using there inatal time stamp as their id so that no one EVER has the same id
+		var snake = new Snake(timeStamp, [[randX,randY]], "PublicRoom", timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
 		PublicRoom.snakes.push(snake);
 		res.send({
 			"result":"success",
@@ -400,7 +400,7 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 });
 
 
-function Snake(ID, blocks, roomCode, timeStamp, color) {
+function Snake(ID, blocks, roomCode, timeStamp) {
 	this.ID = ID;
 	this.blocks = blocks;
 	this.roomCode = roomCode;
@@ -410,7 +410,7 @@ function Snake(ID, blocks, roomCode, timeStamp, color) {
 	this.alive = true;
 	this.timeStamp = timeStamp;
 	this.timeDiffrence = Date.now() - timeStamp;
-	this.color = color;
+	this.color = getRandomColor();
 }
 
 function Room(ID, snakes) {
