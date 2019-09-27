@@ -307,8 +307,6 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		}
 	} else { // in a public room
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
-			if (i == 1) console.log(PublicRoom.snakes[i].ID == InfoFromClient.ID);
-			console.log("1");
 			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
 				var setNewDirection = false;
 				var lengthOf1 = PublicRoom.snakes[i].blocks.length == 1;
@@ -317,7 +315,6 @@ app.get('/Direction/:infoToServer', function (req, res) {
 				if ((PublicRoom.snakes[i].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
 				if ((PublicRoom.snakes[i].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
 				if (setNewDirection) PublicRoom.snakes[i].directionReqest = InfoFromClient.direction;
-				if(setNewDirection) console.log(InfoFromClient.direction);
 				res.send({
 					"result":"success"
 				});
@@ -328,8 +325,8 @@ app.get('/Direction/:infoToServer', function (req, res) {
 						"result":"error",
 						"err":"Your snake is dead"
 					});
-				}
-				return;		
+					return;	
+				}	
 			}
 		}
 	}
