@@ -114,7 +114,6 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 		PublicRoom.snakes.push(snake);
 		res.send({
 			"result":"success",
-			"ID":timeStamp
 		});
 		return;
 	}
@@ -309,7 +308,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 	} else { // in a public room
 		console.log(PublicRoom.snakes.length);
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
-			console.log(PublicRoom.snakes[i].ID == InfoFromClient.ID);
+			console.log(PublicRoom.snakes[i].ID);
 			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
 				if(i == 1) console.log("got in for player 2");
 				var setNewDirection = false;
