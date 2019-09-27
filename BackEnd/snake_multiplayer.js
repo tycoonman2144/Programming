@@ -243,7 +243,7 @@ function EatFruit(snake, room) {
 }
 
 function Dead(snake, room) {
-	if(room.RoomID != "PublicRoom") { // if not in public room
+	if(room.ID != "PublicRoom") { // if not in public room
 		snake.alive = false;
 		var howManyAlive = 0;
 		for(var i = 0; i < room.snakes.length; i++) {
