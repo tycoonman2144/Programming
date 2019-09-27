@@ -307,6 +307,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 			}
 		}
 	} else { // in a public room
+		console.log(PublicRoom.snakes.length);
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
 			if(i == 1) console.log(PublicRoom.snakes[i].ID == InfoFromClient.ID)
 			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
