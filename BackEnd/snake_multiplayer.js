@@ -161,7 +161,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 				for(var i = 0; i < PublicRoom.snakes.length; i++) { //for public room
 					if(PublicRoom.snakes[i].alive == true) {
 						PublicRoom.snakes[i].direction = PublicRoom.snakes[i].directionReqest;
-						if(i == 1) console.log(PublicRoom.snakes[i].directionReqest);
 						Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
 					}
 				}
@@ -310,6 +309,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 	} else { // in a public room
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
 			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
+				if(i == 1) console.log("got in for player 2");
 				var setNewDirection = false;
 				var lengthOf1 = PublicRoom.snakes[i].blocks.length == 1;
 				if ((PublicRoom.snakes[i].direction != "down" && InfoFromClient.direction == "up") || lengthOf1) setNewDirection = true;
@@ -317,6 +317,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 				if ((PublicRoom.snakes[i].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
 				if ((PublicRoom.snakes[i].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
 				if (setNewDirection) PublicRoom.snakes[i].directionReqest = InfoFromClient.direction;
+				if(setNewDirection) console.log(InfoFromClient.direction);
 				res.send({
 					"result":"success"
 				});
