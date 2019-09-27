@@ -79,7 +79,7 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 					if(PrivRooms[i].snakes[j].blocks[0] == randX && PrivRooms[i].snakes[j].blocks[0] == randY) {
 						randX = Math.floor(Math.random() * 79);
 						randY = Math.floor(Math.random() * 39);
-						i = 0;
+						j = 0;
 					}
 				}
 				var snake = new Snake(timeStamp, [[randX,randY]], AttemptID, timeStamp); //using there inatal time stamp as their id so that no one EVER has the same id
