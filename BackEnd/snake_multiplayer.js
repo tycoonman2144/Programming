@@ -308,6 +308,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 	} else { // in a public room
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
 			if (i == 1) console.log(PublicRoom.snakes[i].ID == InfoFromClient.ID);
+			console.log("1");
 			if(PublicRoom.snakes[i].ID == InfoFromClient.ID && PublicRoom.snakes[i].alive == true) {
 				var setNewDirection = false;
 				var lengthOf1 = PublicRoom.snakes[i].blocks.length == 1;
