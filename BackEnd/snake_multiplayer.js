@@ -52,8 +52,9 @@ function getRandomColor() {
   return color;
 }
 
-app.get('/setUpRoom/:time', function (req, res) {
-	var time = req.params.time;
+app.get('/setUpRoom/:infoToServer', function (req, res) {
+	var infoFromClient = JSON.parse(req.params.infoToServer);
+	var time = infoFromClient.time;
 	var result = GetRandomID();
 	for (var i = 0; i < PrivRooms.length; i++) {
 		if(PrivRooms[i].ID == result) {
@@ -64,7 +65,12 @@ app.get('/setUpRoom/:time', function (req, res) {
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
 	var snake = new Snake(0, [[randX,randY]], result, time); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
-	var room = new Room(result, [snake]);
+	if(infoFromClient.Solo == "false") { //if not playing solo
+		var room = new Room(result, [snake]);
+	} else { //if playing solo
+		result = "SoloRoom" + time
+		var room = new Room(result, [snake]);
+	}
 	PrivRooms.push(room);
 	EatFruit(null, room);
 	res.send({
@@ -258,7 +264,7 @@ function Dead(snake, room) {
 		for(var i = 0; i < room.snakes.length; i++) {
 			if(room.snakes[i].alive == true) howManyAlive++;
 		}
-		if(howManyAlive == 1) {
+		if(howManyAlive <= 1) {
 			room.active = false; //ends game
 			room.isGameOver = true;	
 		}
