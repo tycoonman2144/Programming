@@ -152,7 +152,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	if(RoomID != "PublicRoom") { // if not in a public room
 		for(var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;
-			console.log("got here");
 		}
 	}
 	if (moveInterval == null) {
@@ -161,6 +160,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 					if(PrivRooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < PrivRooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(PrivRooms[i].snakes[j].alive == true) {
+								console.log("got here");
 								PrivRooms[i].snakes[j].direction = PrivRooms[i].snakes[j].directionReqest;
 								Move(PrivRooms[i].snakes[j], PrivRooms[i]); //this includes growing, makeing/eating fruit, dieing
 							}
