@@ -399,6 +399,13 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 	}
 });
 
+app.get('/pause/:RoomID', function(req, res){
+	var RoomID = req.params.RoomID;
+	for (var i = 0; i < PrivRooms.length; i++){
+		if(RoomID == PrivRooms[i].ID) PrivRooms[i].active = !PrivRooms[i].active;	
+	}
+});
+
 
 function Snake(ID, blocks, roomCode, timeStamp) {
 	this.ID = ID;
