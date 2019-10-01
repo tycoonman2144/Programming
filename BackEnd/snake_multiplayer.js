@@ -65,11 +65,12 @@ app.get('/setUpRoom/:infoToServer', function (req, res) {
 	var randX = Math.floor(Math.random() * 79);
 	var randY = Math.floor(Math.random() * 39);
 	var snake = new Snake(0, [[randX,randY]], result, time); //id(since he started the room hes number 0), blocks, roomCode, direction, gorwing number, isAlive	
+	var room;
 	if(infoFromClient.Solo == "false") { //if not playing solo
-		var room = new Room(result, [snake]);
+		room = new Room(result, [snake]);
 	} else { //if playing solo
-		result = "SoloRoom" + time
-		var room = new Room(result, [snake]);
+		result = "SoloRoom" + time;
+		room = new Room(result, [snake]);
 		room.active = true;
 	}
 	PrivRooms.push(room);
