@@ -289,6 +289,8 @@ app.get('/Direction/:infoToServer', function (req, res) {
 		for (var i = 0; i < PrivRooms.length; i++) {
 			if(PrivRooms[i].ID == InfoFromClient.roomID && PrivRooms[i].active == true) { //if same room as client
 				for(var j = 0; j < PrivRooms[i].snakes.length; j++) {
+					console.log(PrivRooms[i].snakes[j].ID == InfoFromClient.ID);
+					console.log(PrivRooms[i].snakes[j].alive == true);
 					if(PrivRooms[i].snakes[j].ID == InfoFromClient.ID && PrivRooms[i].snakes[j].alive == true) { //if same snake as client and if not dead
 						var setNewDirection = false;
 						var lengthOf1 = PrivRooms[i].snakes[j].blocks.length == 1;
