@@ -159,7 +159,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 				for (var i = 0; i < PrivRooms.length; i++) { //for private rooms
 					if(PrivRooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < PrivRooms[i].snakes.length; j++) { //looks through the list of snakes
-							console.log(PrivRooms[i].snakes[j].alive);
 							if(PrivRooms[i].snakes[j].alive == true) {
 								PrivRooms[i].snakes[j].direction = PrivRooms[i].snakes[j].directionReqest;
 								Move(PrivRooms[i].snakes[j], PrivRooms[i]); //this includes growing, makeing/eating fruit, dieing
