@@ -151,7 +151,8 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	if(RoomID != "PublicRoom") { // if not in a public room
 		for(var i = 0; i < PrivRooms.length; i++) {
-			if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;	
+			if(PrivRooms[i].ID == RoomID) PrivRooms[i].active = true;
+			console.log("got here");
 		}
 	}
 	if (moveInterval == null) {
