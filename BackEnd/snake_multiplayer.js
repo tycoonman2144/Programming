@@ -70,6 +70,7 @@ app.get('/setUpRoom/:infoToServer', function (req, res) {
 	} else { //if playing solo
 		result = "SoloRoom" + time
 		var room = new Room(result, [snake]);
+		room.active = true;
 	}
 	PrivRooms.push(room);
 	EatFruit(null, room);
