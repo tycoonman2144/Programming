@@ -402,10 +402,7 @@ app.get('/ImStillHere/:infoToServer', function(req, res) {
 app.get('/pause/:RoomID', function(req, res){
 	var RoomID = req.params.RoomID;
 	for (var i = 0; i < PrivRooms.length; i++){
-		if(RoomID == PrivRooms[i].ID) {
-			PrivRooms[i].active = !PrivRooms[i].active;	
-			console.log(PrivRooms[i].active);
-		}
+		if(RoomID == PrivRooms[i].ID) PrivRooms[i].active = !PrivRooms[i].active;	
 	}
 	res.send({
 		"result":"success"
