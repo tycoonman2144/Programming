@@ -131,19 +131,14 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
-	//console.log("Current Room at beginning: " + CurrentRoom);
-	//console.log("room id: " + RoomID);
 	CheckIfExited(RoomID);
-	//console.log("Current room after check if exit " + CurrentRoom);
 	if(RoomID != "PublicRoom") { //if your not in the public room
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
-			console.log(PrivRooms[i].snakes);
 			if(PrivRooms[i].ID == RoomID) CurrentRoom = PrivRooms[i];	
 		}
 	} else { //if in the public room
 		CurrentRoom = PublicRoom;
 	}
-	//console.log("CURRENTROOM before send: " + CurrentRoom);
 	res.send({
 		"result":"success",
 		"room":CurrentRoom
@@ -226,6 +221,7 @@ function Move(snake, room) {
 		var y =  snake.blocks[snake.blocks.length - 1][1];
 	}
 	for (var i = 0; i < room.snakes.length; i++) {
+		if(room.ID != "PublicRoom") console.log(room.snakes);
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
 			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true) Dead(snake, room);  //if someone died
 		}
