@@ -407,6 +407,9 @@ app.get('/pause/:RoomID', function(req, res){
 			console.log(PrivRooms[i].active);
 		}
 	}
+	res.send({
+		"result":"success"
+	});
 });
 
 
