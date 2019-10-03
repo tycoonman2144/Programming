@@ -221,7 +221,6 @@ function Move(snake, room) {
 		var y =  snake.blocks[snake.blocks.length - 1][1];
 	}
 	for (var i = 0; i < room.snakes.length; i++) {
-		if(room.ID != "PublicRoom") console.log(room.snakes[i].blocks.length);
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
 			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true) Dead(snake, room);  //if someone died
 		}
