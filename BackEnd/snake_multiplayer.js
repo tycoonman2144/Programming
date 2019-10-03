@@ -137,7 +137,7 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	//console.log("Current room after check if exit " + CurrentRoom);
 	if(RoomID != "PublicRoom") { //if your not in the public room
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
-			console.log(PrivRooms[i].ID);
+			console.log(PrivRooms[i].snakes);
 			if(PrivRooms[i].ID == RoomID) CurrentRoom = PrivRooms[i];	
 		}
 	} else { //if in the public room
