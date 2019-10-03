@@ -134,6 +134,8 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	CheckIfExited(RoomID);
 	if(RoomID != "PublicRoom") { //if your not in the public room
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
+			console.log("PrivRoom ID:" + PrivRooms[i].ID);
+			console.log("roomID" + RoomID);
 			if(PrivRooms[i].ID == RoomID) CurrentRoom = PrivRooms[i];	
 		}
 	} else { //if in the public room
@@ -145,7 +147,6 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	}
 	res.send({
 		"result":"success",
-		"DummyField":"THis b dumb text",
 		"room":CurrentRoom
 	});
 });
