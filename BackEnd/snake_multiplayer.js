@@ -141,6 +141,7 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	}
 	res.send({
 		"result":"success",
+		"DummyField":"THis b dumb text",
 		"room":CurrentRoom
 	});
 });
