@@ -131,20 +131,19 @@ app.get('/JoinRoom/:infoToServer', function (req, res) {
 app.get('/getInfo/:RoomID', function (req, res) {
 	var RoomID = req.params.RoomID;
 	var CurrentRoom;
-	console.log("Current Room at beginning: " + CurrentRoom);
-	console.log("room id: " + RoomID);
+	//console.log("Current Room at beginning: " + CurrentRoom);
+	//console.log("room id: " + RoomID);
 	CheckIfExited(RoomID);
-	console.log("Current room after check if exit " + CurrentRoom);
+	//console.log("Current room after check if exit " + CurrentRoom);
 	if(RoomID != "PublicRoom") { //if your not in the public room
 		for(var i = 0; i< PrivRooms.length; i++) { //trys to find room with the id they sent in.
-			if(PrivRooms[i].ID == RoomID) {
-				CurrentRoom = PrivRooms[i];	
-			}
+			console.log(PrivRooms[i].ID);
+			if(PrivRooms[i].ID == RoomID) CurrentRoom = PrivRooms[i];	
 		}
 	} else { //if in the public room
 		CurrentRoom = PublicRoom;
 	}
-	console.log("CURRENTROOM before send: " + CurrentRoom);
+	//console.log("CURRENTROOM before send: " + CurrentRoom);
 	res.send({
 		"result":"success",
 		"room":CurrentRoom
