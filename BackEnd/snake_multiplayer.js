@@ -139,6 +139,10 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	} else { //if in the public room
 		CurrentRoom = PublicRoom;
 	}
+	if (CurrentRoom == undefined || CurrentRoom == null)
+	{
+		CurrentRoom = "FAKE ROOM JUST TEXT";
+	}
 	res.send({
 		"result":"success",
 		"DummyField":"THis b dumb text",
