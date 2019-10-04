@@ -227,23 +227,13 @@ function Move(snake, room) {
 	//console.log(PrivRooms[0]);
 
 	for (var i = 0; i < room.snakes.length; i++) {
-		//console.log("Trying snake at index: " + i + " with room id: " + room.ID + ".");
-		//console.log("Here's room.snakes[i]");
-		//console.log(room.snakes[i]);
-		//console.log("Here's room.snakes[i].blocks");
-		//console.log(room.snakes[i].blocks);
-		
-
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
-			//console.log("j: " + j);
-			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true)
-			{
+			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true) {
 				Dead(snake, room);  //if someone died
 				break;
 			}
 		}
 	}
-	//Color();		ADD THIS LATER
 	if (room.fruit[0] == x && room.fruit[1] == y) EatFruit(snake, room);
 	X_YList = [x , y];
 	snake.blocks.push(X_YList);		
