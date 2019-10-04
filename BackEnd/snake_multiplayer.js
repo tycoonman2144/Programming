@@ -229,6 +229,9 @@ function Move(snake, room) {
 
 	for (var i = 0; i < room.snakes.length; i++) {
 		console.log("Trying snake at index: " + i + " with room id: " + room.ID + ".");
+		console.log("Here's room again");
+		console.log(room);	
+
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
 			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true) Dead(snake, room);  //if someone died
 		}
