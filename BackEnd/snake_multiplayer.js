@@ -224,18 +224,18 @@ function Move(snake, room) {
 		var x =  snake.blocks[snake.blocks.length - 1][0] == 79 ? 0 : snake.blocks[snake.blocks.length - 1][0] + 1;
 		var y =  snake.blocks[snake.blocks.length - 1][1];
 	}
-	console.log(PrivRooms[0]);
+	//console.log(PrivRooms[0]);
 
 	for (var i = 0; i < room.snakes.length; i++) {
-		console.log("Trying snake at index: " + i + " with room id: " + room.ID + ".");
-		console.log("Here's room.snakes[i]");
-		console.log(room.snakes[i]);
-		console.log("Here's room.snakes[i].blocks");
-		console.log(room.snakes[i].blocks);
+		//console.log("Trying snake at index: " + i + " with room id: " + room.ID + ".");
+		//console.log("Here's room.snakes[i]");
+		//console.log(room.snakes[i]);
+		//console.log("Here's room.snakes[i].blocks");
+		//console.log(room.snakes[i].blocks);
 		
 
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
-			console.log("j: " + j);
+			//console.log("j: " + j);
 			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true)
 			{
 				Dead(snake, room);  //if someone died
