@@ -266,7 +266,10 @@ function Dead(snake, room) {
 		}
 	} else { //in public room
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
-			if(PublicRoom.snakes[i].ID == snake.ID) PublicRoom.snakes.splice(i, 1);
+			if(PublicRoom.snakes[i].ID == snake.ID) {
+				PublicRoom.snakes.splice(i, 1);
+				break;
+			}
 		}
 	}
 }
