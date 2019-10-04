@@ -224,6 +224,12 @@ function Move(snake, room) {
 		var x =  snake.blocks[snake.blocks.length - 1][0] == 79 ? 0 : snake.blocks[snake.blocks.length - 1][0] + 1;
 		var y =  snake.blocks[snake.blocks.length - 1][1];
 	}
+	
+	console.log("SHOWING ALL SNAKES");
+	for(var i = 0; i < PrivRooms[0].snakes.length; i++) {
+		console.log(PrivRooms[0].snakes[i]);
+	}
+	
 	for (var i = 0; i < room.snakes.length; i++) {
 		for (var j = 0; j < room.snakes[i].blocks.length; j++) {
 			if ((room.snakes[i].blocks[j][0] == x && room.snakes[i].blocks[j][1] == y) && room.snakes[i].alive == true) Dead(snake, room);  //if someone died
@@ -270,9 +276,6 @@ function Dead(snake, room) {
 				PublicRoom.snakes.splice(i, 1);
 				break;
 			}
-		}
-		for(var i = 0; i < PrivRooms[0].snakes.length; i++) {
-			console.log(PrivRooms[0].snakes[i]);
 		}
 	}
 }
