@@ -255,7 +255,6 @@ function EatFruit(snake, room) {
 
 function Dead(snake, room) {
 	if(room.ID != "PublicRoom") { // if not in public room
-		console.log("should not have gotten here");
 		snake.alive = false;
 		var howManyAlive = 0;
 		for(var i = 0; i < room.snakes.length; i++) {
