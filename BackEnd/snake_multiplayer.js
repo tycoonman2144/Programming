@@ -265,6 +265,7 @@ function Dead(snake, room) {
 			room.isGameOver = true;	
 		}
 	} else { //in public room
+		console.log("Dead");
 		for(var i = 0; i < PublicRoom.snakes.length; i++) {
 			if(PublicRoom.snakes[i].ID == snake.ID) {
 				PublicRoom.snakes.splice(i, 1);
