@@ -298,6 +298,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 						if ((PrivRooms[i].snakes[j].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
 						if ((PrivRooms[i].snakes[j].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
 						if ((PrivRooms[i].snakes[j].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
+						if (InfoFromClient.speed != "none") PrivRooms[i].snakes[j].speed = InfoFromClient.speed;
 						if (setNewDirection) PrivRooms[i].snakes[j].directionReqest = InfoFromClient.direction;
 						res.send({
 							"result":"success"
@@ -332,7 +333,9 @@ app.get('/Direction/:infoToServer', function (req, res) {
 				if ((PublicRoom.snakes[i].direction != "right" && InfoFromClient.direction == "left") || lengthOf1) setNewDirection = true;
 				if ((PublicRoom.snakes[i].direction != "up" && InfoFromClient.direction == "down") || lengthOf1) setNewDirection = true;
 				if ((PublicRoom.snakes[i].direction != "left" && InfoFromClient.direction == "right") || lengthOf1) setNewDirection = true;
+				if (InfoFromClient.speed != "none") PublicRoom.snakes[i].speed = InfoFromClient.speed;
 				if (setNewDirection) PublicRoom.snakes[i].directionReqest = InfoFromClient.direction;
+				console.log(PublicRoom.snakes[i].speed);
 				res.send({
 					"result":"success"
 				});
@@ -430,6 +433,7 @@ function Snake(ID, blocks, roomCode, timeStamp) {
 	this.timeStamp = timeStamp;
 	this.timeDiffrence = Date.now() - timeStamp;
 	this.color = getRandomColor();
+	this.speed = 3;
 }
 
 function Room(ID, snakes) {
