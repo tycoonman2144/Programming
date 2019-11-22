@@ -336,7 +336,7 @@ app.get('/Direction/:infoToServer', function (req, res) {
 				if (InfoFromClient.speed != "none") PublicRoom.snakes[i].speed = InfoFromClient.speed;
 				if (setNewDirection) PublicRoom.snakes[i].directionReqest = InfoFromClient.direction;
 				console.log(InfoFromClient.speed);
-				console.log(PublicRoom.snakes[i].speed);
+				//console.log(PublicRoom.snakes[i].speed);
 				res.send({
 					"result":"success"
 				});
