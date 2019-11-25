@@ -140,10 +140,6 @@ app.get('/getInfo/:RoomID', function (req, res) {
 	} else { //if in the public room
 		CurrentRoom = PublicRoom;
 	}
-	if (CurrentRoom == undefined || CurrentRoom == null)
-	{
-		CurrentRoom = "FAKE ROOM JUST TEXT";
-	}
 	res.send({
 		"result":"success",
 		"room":CurrentRoom
@@ -164,7 +160,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 					if(PrivRooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < PrivRooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(PrivRooms[i].snakes[j].alive == true) {
-								PrivRooms[i].snakes[j].direction = PrivRooms[i].snakes[j].directionReqest;
 								if((PrivRooms[i].snakes[j].speed == 1) || (PrivRooms[i].snakes[j].speed == 2 && counter % 60 == 0) || (PrivRooms[i].snakes[j].speed == 3 && counter % 90 == 0)) Move(PrivRooms[i].snakes[j], PrivRooms[i]); //this includes growing, makeing/eating fruit, dieing
 							}
 						}
@@ -172,7 +167,6 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 				}
 				for(var i = 0; i < PublicRoom.snakes.length; i++) { //for public room
 					if(PublicRoom.snakes[i].alive == true) {
-						PublicRoom.snakes[i].direction = PublicRoom.snakes[i].directionReqest;
 						if((PublicRoom.snakes[i].speed == 1) || (PublicRoom.snakes[i].speed == 2 && counter % 60 == 0) || (PublicRoom.snakes[i].speed == 3 && counter % 90 == 0)) Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
 					}
 				}
@@ -203,6 +197,7 @@ function CheckIfExited(RoomID) {
 }
 
 function Move(snake, room) {
+	snake.direction = snake.directionReqest;
 	var X_YList = [];
 	var growing = false;
 	var direction = snake.direction;
@@ -444,12 +439,6 @@ function Room(ID, snakes) {
 	this.fruit = [];
 	this.isGameOver = false;
 }
-
-
-
-
-
-
 
 
 
