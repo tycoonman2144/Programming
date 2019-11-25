@@ -12,6 +12,7 @@ var PublicRoom = new Room("PublicRoom", []);
 PublicRoom.fruit = [5, 20];
 PublicRoom.active = true;
 var moveInterval = null;
+var counter = 0;
 
 app.use(express.static(path.join(__dirname, 'public'))); // this middleware serves static files, such as .js, .img, .css files
 
@@ -158,12 +159,13 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 	}
 	if (moveInterval == null) {
 		moveInterval = setInterval( function(){
+				counter += 30;
 				for (var i = 0; i < PrivRooms.length; i++) { //for private rooms
 					if(PrivRooms[i].active == true) { // if im looking at a room that has started
 						for(var j = 0; j < PrivRooms[i].snakes.length; j++) { //looks through the list of snakes
 							if(PrivRooms[i].snakes[j].alive == true) {
 								PrivRooms[i].snakes[j].direction = PrivRooms[i].snakes[j].directionReqest;
-								Move(PrivRooms[i].snakes[j], PrivRooms[i]); //this includes growing, makeing/eating fruit, dieing
+								if((PrivRooms[i].snakes[j].speed == 1) || (PrivRooms[i].snakes[j].speed == 2 && counter % 60 == 0) || (PrivRooms[i].snakes[j].speed == 3 && counter % 90 == 0)) Move(PrivRooms[i].snakes[j], PrivRooms[i]); //this includes growing, makeing/eating fruit, dieing
 							}
 						}
 					}
@@ -171,10 +173,10 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 				for(var i = 0; i < PublicRoom.snakes.length; i++) { //for public room
 					if(PublicRoom.snakes[i].alive == true) {
 						PublicRoom.snakes[i].direction = PublicRoom.snakes[i].directionReqest;
-						Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
+						if((PublicRoom.snakes[i].speed == 1) || PublicRoom.snakes[i].speed == 2 && counter % 60 == 0) || (PublicRoom.snakes[i].speed == 3 && counter % 90 == 0)) Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
 					}
 				}
-			},90);
+			},30);
 	}
 	res.send({
 		"result":"success"
