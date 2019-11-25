@@ -173,7 +173,7 @@ app.get('/startMultiPlayerGame/:RoomID', function (req, res) {
 				for(var i = 0; i < PublicRoom.snakes.length; i++) { //for public room
 					if(PublicRoom.snakes[i].alive == true) {
 						PublicRoom.snakes[i].direction = PublicRoom.snakes[i].directionReqest;
-						if((PublicRoom.snakes[i].speed == 1) || PublicRoom.snakes[i].speed == 2 && counter % 60 == 0) || (PublicRoom.snakes[i].speed == 3 && counter % 90 == 0)) Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
+						if((PublicRoom.snakes[i].speed == 1) || (PublicRoom.snakes[i].speed == 2 && counter % 60 == 0) || (PublicRoom.snakes[i].speed == 3 && counter % 90 == 0)) Move(PublicRoom.snakes[i], PublicRoom); //this includes growing, makeing/eating fruit, dieing	
 					}
 				}
 			},30);
